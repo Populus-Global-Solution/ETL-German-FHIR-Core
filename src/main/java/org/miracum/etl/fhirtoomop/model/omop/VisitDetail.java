@@ -81,14 +81,14 @@ public class VisitDetail {
    * A foreign key to the predefined concept in the Place of Service Vocabulary reflecting the
    * admitting source for a visit.
    */
-  @Column(name = "admitting_source_concept_id")
+  @Column(name = "admitted_from_concept_id")
   private Long admittingSourceConceptId;
 
   /**
    * A foreign key to the predefined concept in the Place of Service Vocabulary reflecting the
    * discharge disposition for a visit.
    */
-  @Column(name = "discharge_to_concept_id")
+  @Column(name = "discharged_to_concept_id")
   private Long dischargeToConceptId;
 
   /** A foreign key to the visit_detail table of the visit immediately preceding this visit. */
@@ -104,18 +104,18 @@ public class VisitDetail {
   private Integer visitDetailSourceConceptId;
 
   /** The source code for where the patient was admitted from as it appears in the source data. */
-  @Column(name = "admitting_source_value")
+  @Column(name = "admitted_from_source_value")
   private String admittingSourceValue;
 
   /** The source code for the discharge disposition as it appears in the source data. */
-  @Column(name = "discharge_to_source_value")
+  @Column(name = "discharged_to_source_value")
   private String dischargeToSourceValue;
 
   /**
    * A foreign key to the visit_detail table record to represent the immediate parent visit-detail
    * record.
    */
-  @Column(name = "visit_detail_parent_id")
+  @Column(name = "parent_visit_detail_id")
   private Integer visitDetailParentId;
 
   /** A foreign key that refers to the record in the visit_occurrence table. */

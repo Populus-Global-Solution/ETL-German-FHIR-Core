@@ -48,13 +48,13 @@ public class DeviceExposure {
   private int deviceTypeConceptId;
 
   @Column(name = "unique_device_id")
-  private Long uniqueDeviceId;
+  private String uniqueDeviceId;
 
   @Column(name = "quantity")
   private BigDecimal quantity;
 
   @Column(name = "provider_id")
-  private Long provicerId;
+  private Long providerId;
 
   @Column(name = "visit_occurrence_id")
   private Long visitOccurrenceId;

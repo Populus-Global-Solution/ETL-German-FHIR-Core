@@ -11,7 +11,7 @@ WITH fr AS
     FROM cdm.visit_detail
 )
 UPDATE cdm.visit_detail
-SET admitting_source_value = fr.source_value
+SET admitted_from_source_value = fr.source_value
 FROM fr
 WHERE visit_detail.visit_detail_id = fr.visit_detail_id
 ;
@@ -33,7 +33,7 @@ WITH discharge_to AS
     FROM cdm.visit_detail
 )
 UPDATE cdm.visit_detail
-SET discharge_to_source_value = discharge_to.source_value
+SET discharged_to_source_value = discharge_to.source_value
 FROM discharge_to
 WHERE visit_detail.visit_detail_id=discharge_to.visit_detail_id
 ;
@@ -68,9 +68,9 @@ $$;
 Do
 $$
 BEGIN
-IF NOT EXISTS (SELECT constraint_name FROM information_schema.constraint_column_usage WHERE constraint_name = 'fpk_v_detail_preceding')
+IF NOT EXISTS (SELECT constraint_name FROM information_schema.constraint_column_usage WHERE constraint_name = 'fpk_visit_detail_preceding_visit_detail_id')
 THEN
-ALTER TABLE visit_detail ADD CONSTRAINT fpk_v_detail_preceding FOREIGN KEY (preceding_visit_detail_id) REFERENCES visit_detail (visit_detail_id);
+ALTER TABLE visit_detail ADD CONSTRAINT fpk_visit_detail_preceding_visit_detail_id FOREIGN KEY (preceding_visit_detail_id) REFERENCES visit_detail (visit_detail_id);
 END IF;
 END;
 $$;
@@ -78,9 +78,9 @@ $$;
 Do
 $$
 BEGIN
-IF NOT EXISTS (SELECT constraint_name FROM information_schema.constraint_column_usage WHERE constraint_name = 'fpk_v_detail_parent')
+IF NOT EXISTS (SELECT constraint_name FROM information_schema.constraint_column_usage WHERE constraint_name = 'fpk_visit_detail_parent_visit_detail_id')
 THEN
-ALTER TABLE visit_detail ADD CONSTRAINT fpk_v_detail_parent FOREIGN KEY (visit_detail_parent_id) REFERENCES visit_detail (visit_detail_id);
+ALTER TABLE visit_detail ADD CONSTRAINT fpk_visit_detail_parent_visit_detail_id FOREIGN KEY (visit_detail_parent_id) REFERENCES visit_detail (visit_detail_id);
 END IF;
 END;
 $$;

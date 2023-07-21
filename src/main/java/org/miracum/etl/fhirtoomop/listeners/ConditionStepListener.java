@@ -150,7 +150,7 @@ public class ConditionStepListener implements StepExecutionListener {
   public ExitStatus afterStep(StepExecution stepExecution) {
     memoryLogger.logMemoryDebugOnly();
     if (bulkload.equals(Boolean.TRUE)) {
-      dbMappings.getFindIcdSnomedMapping().clear();
+      // dbMappings.getFindIcdSnomedMapping().clear();
       if (dictionaryLoadInRam.equals(Boolean.TRUE)) {
         dbMappings.getFindPersonIdByIdentifier().clear();
         dbMappings.getFindPersonIdByLogicalId().clear();

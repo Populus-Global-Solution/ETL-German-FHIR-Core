@@ -85,22 +85,22 @@ public class VisitOccurrence {
    * A foreign key to the predefined concept in the Place of Service Vocabulary reflecting where the
    * patient was admitted from.
    */
-  @Column(name = "admitting_source_concept_id")
+  @Column(name = "admitted_from_concept_id")
   private Integer admittingSourceConceptId;
 
   /** The source code for the admitting source as it appears in the source data. */
-  @Column(name = "admitting_source_value")
+  @Column(name = "admitted_from_source_value")
   private String admittingSourceValue;
 
   /**
    * A foreign key to the predefined concept in the Place of Service Vocabulary reflecting the
    * discharge disposition for a visit.
    */
-  @Column(name = "discharge_to_concept_id")
+  @Column(name = "discharged_to_concept_id")
   private Integer dischargeToConceptId;
 
   /** The source code for the discharge disposition as it appears in the source data. */
-  @Column(name = "discharge_to_source_value")
+  @Column(name = "discharged_to_source_value")
   private String dischargeToSourceValue;
 
   /** A foreign key to the visit_occurrence table of the visit immediately preceding this visit. */
