@@ -39,7 +39,7 @@ WITH location_references AS
                 ON              o.fhir_logical_id=lr.fhir_logical_id
                 WHERE           o.observation_concept_id =42528907 ) , primary_insert AS
 (
-            INSERT INTO cds_cdm.fact_relationship
+            INSERT INTO cdm.fact_relationship
                         (
                                     domain_concept_id_1,
                                     fact_id_1,
@@ -62,7 +62,7 @@ WITH location_references AS
                    fhir_identifier
             FROM   travel_history_start returning * ), inserted_rows AS
 (
-            INSERT INTO cds_cdm.fact_relationship
+            INSERT INTO cdm.fact_relationship
                         (
                                     domain_concept_id_1,
                                     fact_id_1,
@@ -137,7 +137,7 @@ WITH location_references AS
                 ON              o.fhir_logical_id=lr.fhir_logical_id
                 WHERE           o.observation_concept_id =37021024 ) , primary_insert AS
 (
-            INSERT INTO cds_cdm.fact_relationship
+            INSERT INTO cdm.fact_relationship
                         (
                                     domain_concept_id_1,
                                     fact_id_1,
@@ -160,7 +160,7 @@ WITH location_references AS
                    fhir_identifier
             FROM   travel_history_start returning * ), inserted_rows AS
 (
-            INSERT INTO cds_cdm.fact_relationship
+            INSERT INTO cdm.fact_relationship
                         (
                                     domain_concept_id_1,
                                     fact_id_1,
@@ -219,7 +219,7 @@ WITH start_date AS
        JOIN   end_date ed
        ON     sd.fhir_logical_id = ed.fhir_logical_id) ,primary_insert AS
 (
-            insert INTO cds_cdm.fact_relationship
+            insert INTO cdm.fact_relationship
                         (
                                     domain_concept_id_1,
                                     fact_id_1,
@@ -241,7 +241,7 @@ WITH start_date AS
                    end_fhir_logical_id,
                    end_fhir_identifier
             FROM   start_end_pair returning * )
-INSERT INTO cds_cdm.fact_relationship
+INSERT INTO cdm.fact_relationship
             (
                         domain_concept_id_1 ,
                         fact_id_1,

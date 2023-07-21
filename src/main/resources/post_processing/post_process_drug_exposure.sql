@@ -42,7 +42,7 @@ WITH medication_update AS
            ON mc.logicalId = ed.drug_source_value
           AND ed.drug_exposure_start_date BETWEEN mcc.valid_start_date AND mcc.valid_end_date
 )
-UPDATE cds_cdm.drug_exposure de
+UPDATE cdm.drug_exposure de
 SET    drug_source_value = COALESCE(mu.concept_code,de.drug_source_value)
        , drug_source_concept_id = COALESCE(mu.concept_id,0)
        , drug_concept_id = COALESCE(mu.concept_id,0)

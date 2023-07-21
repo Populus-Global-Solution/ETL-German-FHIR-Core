@@ -15,8 +15,8 @@ ALTER TABLE device_exposure ADD COLUMN IF NOT EXISTS fhir_logical_id varchar(250
 ALTER TABLE fact_relationship ADD COLUMN IF NOT EXISTS fhir_logical_id_1 varchar(250) NULL, ADD COLUMN IF NOT EXISTS fhir_identifier_1 varchar(250) NULL;
 ALTER TABLE fact_relationship ADD COLUMN IF NOT EXISTS fhir_logical_id_2 varchar(250) NULL, ADD COLUMN IF NOT EXISTS fhir_identifier_2 varchar(250) NULL;
 
---Temporarily deleted the FK constraints for the column precending_visit_detail_id
-ALTER TABLE visit_detail DROP CONSTRAINT IF EXISTS fpk_v_detail_preceding;
+--Temporarily deleted the FK constraints for the column preceding_visit_detail_id
+ALTER TABLE visit_detail DROP CONSTRAINT IF EXISTS fpk_visit_detail_preceding_visit_detail_id;
 
 --Adds two new columns called fhir_logical_id and fhir_identifier to cds_etl_helper.post_process_map table
 ALTER TABLE IF EXISTS cds_etl_helper.post_process_map ADD COLUMN IF NOT EXISTS fhir_logical_id varchar(250) NULL, ADD COLUMN IF NOT EXISTS fhir_identifier varchar(250) NULL;
@@ -37,57 +37,57 @@ ALTER TABLE device_exposure ALTER COLUMN device_exposure_id SET DEFAULT nextval(
 ALTER TABLE IF EXISTS cds_etl_helper.data_persistant_map RENAME TO post_process_map;
 
 --Change foriegn keys for person_id to 'on delete cascade'
-ALTER TABLE cds_cdm.procedure_occurrence DROP CONSTRAINT fpk_procedure_person;
-ALTER TABLE cds_cdm.procedure_occurrence ADD CONSTRAINT fpk_procedure_person FOREIGN KEY (person_id) REFERENCES cds_cdm.person(person_id) ON DELETE CASCADE;
+ALTER TABLE cdm.procedure_occurrence DROP CONSTRAINT fpk_procedure_occurrence_person_id;
+ALTER TABLE cdm.procedure_occurrence ADD CONSTRAINT fpk_procedure_occurrence_person_id FOREIGN KEY (person_id) REFERENCES cdm.person(person_id) ON DELETE CASCADE;
 
-ALTER TABLE cds_cdm.drug_exposure DROP CONSTRAINT fpk_drug_person;
-ALTER TABLE cds_cdm.drug_exposure ADD CONSTRAINT fpk_drug_person FOREIGN KEY (person_id) REFERENCES cds_cdm.person(person_id) ON DELETE CASCADE;
+ALTER TABLE cdm.drug_exposure DROP CONSTRAINT fpk_drug_exposure_person_id;
+ALTER TABLE cdm.drug_exposure ADD CONSTRAINT fpk_drug_exposure_person_id FOREIGN KEY (person_id) REFERENCES cdm.person(person_id) ON DELETE CASCADE;
 
-ALTER TABLE cds_cdm.observation DROP CONSTRAINT fpk_observation_person;
-ALTER TABLE cds_cdm.observation ADD CONSTRAINT fpk_observation_person FOREIGN KEY (person_id) REFERENCES cds_cdm.person(person_id) ON DELETE CASCADE;
+ALTER TABLE cdm.observation DROP CONSTRAINT fpk_observation_person_id;
+ALTER TABLE cdm.observation ADD CONSTRAINT fpk_observation_person_id FOREIGN KEY (person_id) REFERENCES cdm.person(person_id) ON DELETE CASCADE;
 
-ALTER TABLE cds_cdm.condition_occurrence DROP CONSTRAINT fpk_condition_person;
-ALTER TABLE cds_cdm.condition_occurrence ADD CONSTRAINT fpk_condition_person FOREIGN KEY (person_id) REFERENCES cds_cdm.person(person_id) ON DELETE CASCADE;
+ALTER TABLE cdm.condition_occurrence DROP CONSTRAINT fpk_condition_occurrence_person_id;
+ALTER TABLE cdm.condition_occurrence ADD CONSTRAINT fpk_condition_occurrence_person_id FOREIGN KEY (person_id) REFERENCES cdm.person(person_id) ON DELETE CASCADE;
 
-ALTER TABLE cds_cdm.visit_occurrence DROP CONSTRAINT fpk_visit_person;
-ALTER TABLE cds_cdm.visit_occurrence ADD CONSTRAINT fpk_visit_person FOREIGN KEY (person_id) REFERENCES cds_cdm.person(person_id) ON DELETE CASCADE;
+ALTER TABLE cdm.visit_occurrence DROP CONSTRAINT fpk_visit_occurrence_person_id;
+ALTER TABLE cdm.visit_occurrence ADD CONSTRAINT fpk_visit_occurrence_person_id FOREIGN KEY (person_id) REFERENCES cdm.person(person_id) ON DELETE CASCADE;
 
-ALTER TABLE cds_cdm.visit_detail DROP CONSTRAINT fpk_v_detail_person;
-ALTER TABLE cds_cdm.visit_detail ADD CONSTRAINT fpk_v_detail_person FOREIGN KEY (person_id) REFERENCES cds_cdm.person(person_id) ON DELETE CASCADE;
+ALTER TABLE cdm.visit_detail DROP CONSTRAINT fpk_visit_detail_person_id;
+ALTER TABLE cdm.visit_detail ADD CONSTRAINT fpk_visit_detail_person_id FOREIGN KEY (person_id) REFERENCES cdm.person(person_id) ON DELETE CASCADE;
 
-ALTER TABLE cds_cdm.observation_period DROP CONSTRAINT fpk_observation_period_person;
-ALTER TABLE cds_cdm.observation_period ADD CONSTRAINT fpk_observation_period_person FOREIGN KEY (person_id) REFERENCES cds_cdm.person(person_id) ON DELETE CASCADE;
+ALTER TABLE cdm.observation_period DROP CONSTRAINT fpk_observation_period_person_id;
+ALTER TABLE cdm.observation_period ADD CONSTRAINT fpk_observation_period_person_id FOREIGN KEY (person_id) REFERENCES cdm.person(person_id) ON DELETE CASCADE;
 
-ALTER TABLE cds_cdm.measurement DROP CONSTRAINT fpk_measurement_person;
-ALTER TABLE cds_cdm.measurement ADD CONSTRAINT fpk_measurement_person FOREIGN KEY (person_id) REFERENCES cds_cdm.person(person_id) ON DELETE CASCADE;
+ALTER TABLE cdm.measurement DROP CONSTRAINT fpk_measurement_person_id;
+ALTER TABLE cdm.measurement ADD CONSTRAINT fpk_measurement_person_id FOREIGN KEY (person_id) REFERENCES cdm.person(person_id) ON DELETE CASCADE;
 
-ALTER TABLE cds_cdm.death DROP CONSTRAINT fpk_death_person;
-ALTER TABLE cds_cdm.death ADD CONSTRAINT fpk_death_person FOREIGN KEY (person_id) REFERENCES cds_cdm.person(person_id) ON DELETE CASCADE;
+ALTER TABLE cdm.death DROP CONSTRAINT fpk_death_person_id;
+ALTER TABLE cdm.death ADD CONSTRAINT fpk_death_person_id FOREIGN KEY (person_id) REFERENCES cdm.person(person_id) ON DELETE CASCADE;
 
-ALTER TABLE cds_cdm.device_exposure DROP CONSTRAINT fpk_device_person;
-ALTER TABLE cds_cdm.device_exposure ADD CONSTRAINT fpk_device_person FOREIGN KEY (person_id) REFERENCES cds_cdm.person(person_id) ON DELETE CASCADE;
+ALTER TABLE cdm.device_exposure DROP CONSTRAINT fpk_device_exposure_person_id;
+ALTER TABLE cdm.device_exposure ADD CONSTRAINT fpk_device_exposure_person_id FOREIGN KEY (person_id) REFERENCES cdm.person(person_id) ON DELETE CASCADE;
 
---Change foriegn keys for visit_occurrence_id to 'on delete cascade'
-ALTER TABLE cds_cdm.procedure_occurrence DROP CONSTRAINT fpk_procedure_visit;
-ALTER TABLE cds_cdm.procedure_occurrence ADD CONSTRAINT fpk_procedure_visit FOREIGN KEY (visit_occurrence_id) REFERENCES cds_cdm.visit_occurrence(visit_occurrence_id) ON DELETE CASCADE;
+--Change foreign keys for visit_occurrence_id to 'on delete cascade'
+ALTER TABLE cdm.procedure_occurrence DROP CONSTRAINT fpk_procedure_occurrence_visit_occurrence_id;
+ALTER TABLE cdm.procedure_occurrence ADD CONSTRAINT fpk_procedure_occurrence_visit_occurrence_id FOREIGN KEY (visit_occurrence_id) REFERENCES cdm.visit_occurrence(visit_occurrence_id) ON DELETE CASCADE;
 
-ALTER TABLE cds_cdm.drug_exposure DROP CONSTRAINT fpk_drug_visit;
-ALTER TABLE cds_cdm.drug_exposure ADD CONSTRAINT fpk_drug_visit FOREIGN KEY (visit_occurrence_id) REFERENCES cds_cdm.visit_occurrence(visit_occurrence_id) ON DELETE CASCADE;
+ALTER TABLE cdm.drug_exposure DROP CONSTRAINT fpk_drug_exposure_visit_occurrence_id;
+ALTER TABLE cdm.drug_exposure ADD CONSTRAINT fpk_drug_exposure_visit_occurrence_id FOREIGN KEY (visit_occurrence_id) REFERENCES cdm.visit_occurrence(visit_occurrence_id) ON DELETE CASCADE;
 
-ALTER TABLE cds_cdm.observation DROP CONSTRAINT fpk_observation_visit;
-ALTER TABLE cds_cdm.observation ADD CONSTRAINT fpk_observation_visit FOREIGN KEY (visit_occurrence_id) REFERENCES cds_cdm.visit_occurrence(visit_occurrence_id) ON DELETE CASCADE;
+ALTER TABLE cdm.observation DROP CONSTRAINT fpk_observation_visit_occurrence_id;
+ALTER TABLE cdm.observation ADD CONSTRAINT fpk_observation_visit_occurrence_id FOREIGN KEY (visit_occurrence_id) REFERENCES cdm.visit_occurrence(visit_occurrence_id) ON DELETE CASCADE;
 
-ALTER TABLE cds_cdm.condition_occurrence DROP CONSTRAINT fpk_condition_visit;
-ALTER TABLE cds_cdm.condition_occurrence ADD CONSTRAINT fpk_condition_visit FOREIGN KEY (visit_occurrence_id) REFERENCES cds_cdm.visit_occurrence(visit_occurrence_id) ON DELETE CASCADE;
+ALTER TABLE cdm.condition_occurrence DROP CONSTRAINT fpk_condition_occurrence_visit_occurrence_id;
+ALTER TABLE cdm.condition_occurrence ADD CONSTRAINT fpk_condition_ocurrence_visit_occurrence_id FOREIGN KEY (visit_occurrence_id) REFERENCES cdm.visit_occurrence(visit_occurrence_id) ON DELETE CASCADE;
 
-ALTER TABLE cds_cdm.visit_detail DROP CONSTRAINT fpd_v_detail_visit;
-ALTER TABLE cds_cdm.visit_detail ADD CONSTRAINT fpd_v_detail_visit FOREIGN KEY (visit_occurrence_id) REFERENCES cds_cdm.visit_occurrence(visit_occurrence_id) ON DELETE CASCADE;
+ALTER TABLE cdm.visit_detail DROP CONSTRAINT fpk_visit_detail_visit_occurrence_id;
+ALTER TABLE cdm.visit_detail ADD CONSTRAINT fpk_visit_detail_visit_occurrence_id FOREIGN KEY (visit_occurrence_id) REFERENCES cdm.visit_occurrence(visit_occurrence_id) ON DELETE CASCADE;
 
-ALTER TABLE cds_cdm.measurement DROP CONSTRAINT fpk_measurement_visit;
-ALTER TABLE cds_cdm.measurement ADD CONSTRAINT fpk_measurement_visit FOREIGN KEY (visit_occurrence_id) REFERENCES cds_cdm.visit_occurrence(visit_occurrence_id) ON DELETE CASCADE;
+ALTER TABLE cdm.measurement DROP CONSTRAINT fpk_measurement_visit_occurrence_id;
+ALTER TABLE cdm.measurement ADD CONSTRAINT fpk_measurement_visit_occurrence_id FOREIGN KEY (visit_occurrence_id) REFERENCES cdm.visit_occurrence(visit_occurrence_id) ON DELETE CASCADE;
 
-ALTER TABLE cds_cdm.device_exposure DROP CONSTRAINT fpk_device_visit;
-ALTER TABLE cds_cdm.device_exposure ADD CONSTRAINT fpk_device_visit FOREIGN KEY (visit_occurrence_id) REFERENCES cds_cdm.visit_occurrence(visit_occurrence_id) ON DELETE CASCADE;
+ALTER TABLE cdm.device_exposure DROP CONSTRAINT fpk_device_exposure_visit_occurrence_id;
+ALTER TABLE cdm.device_exposure ADD CONSTRAINT fpk_device_exposure_visit_occurrence_id FOREIGN KEY (visit_occurrence_id) REFERENCES cdm.visit_occurrence(visit_occurrence_id) ON DELETE CASCADE;
 
 
 END

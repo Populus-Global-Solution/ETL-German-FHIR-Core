@@ -38,7 +38,7 @@ data:
     jdbcUrl: ""
     username: ""
     password: ""
-    schema: "cds_cdm"
+    schema: "cdm"
   beginDate: "" # for example 2020-01-01
   endDate: ""
 

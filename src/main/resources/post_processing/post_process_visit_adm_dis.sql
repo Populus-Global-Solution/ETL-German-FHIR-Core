@@ -43,12 +43,12 @@ WITH adReasonCodes AS
     FROM adReasonCodes ar
     INNER JOIN adReasonConcepts arc
             ON ar.observation_source_value = arc.source_code
-    INNER JOIN cds_cdm.visit_occurrence vo
+    INNER JOIN cdm.visit_occurrence vo
             ON ar.encounter_id = vo.fhir_logical_id
 )
 , upsert AS
 (
-     UPDATE cds_cdm.observation ob
+     UPDATE cdm.observation ob
         SET observation_source_value = ar.observation_source_value
             , value_as_string = ar.value_as_string
             , observation_concept_id = ar.observation_concept_id
@@ -58,7 +58,7 @@ WITH adReasonCodes AS
        AND ob.qualifier_concept_id = ar.qualifier_concept_id
      RETURNING ob.*
 )
-INSERT INTO cds_cdm.observation
+INSERT INTO cdm.observation
 (
     person_id
     , observation_concept_id
@@ -148,12 +148,12 @@ WITH adOccasionCodes AS
     FROM adOccasionCodes ao
     INNER JOIN adOccasionConcepts aoc
             ON ao.observation_source_value = aoc.source_code
-    INNER JOIN cds_cdm.visit_occurrence vo
+    INNER JOIN cdm.visit_occurrence vo
             ON ao.encounter_id = vo.fhir_logical_id
 )
 , upsert AS
 (
-    UPDATE cds_cdm.observation ob
+    UPDATE cdm.observation ob
        SET
         observation_source_value = ao.observation_source_value
         , value_as_string = ao.value_as_string
@@ -164,7 +164,7 @@ WITH adOccasionCodes AS
       AND ob.qualifier_concept_id = ao.qualifier_concept_id
     RETURNING ob.*
 )
-INSERT INTO cds_cdm.observation
+INSERT INTO cdm.observation
 (
     person_id
     , observation_concept_id
@@ -231,7 +231,7 @@ BEGIN
     SELECT
         target_concept_id AS observation_concept_id
         , source_code
-    FROM cds_cdm.source_to_concept_map
+    FROM cdm.source_to_concept_map
     WHERE source_vocabulary_id = 'Dis Reason 1&2 Obs'
 )
 , disReasons AS
@@ -253,13 +253,13 @@ BEGIN
     FROM disReasonCodes dr
     INNER JOIN disReasonConcepts drc
             ON dr.dis_reason_code = drc.source_code
-    INNER JOIN cds_cdm.visit_occurrence vo
+    INNER JOIN cdm.visit_occurrence vo
             ON dr.encounter_id = vo.fhir_logical_id
 )
 , upsert AS
 (
     UPDATE
-        cds_cdm.observation ob
+        cdm.observation ob
     SET
         observation_source_value = dr.observation_source_value
         , value_as_string = dr.value_as_string
@@ -272,7 +272,7 @@ BEGIN
         ob.observation_type_concept_id = dr.observation_type_concept_id
     AND ob.visit_occurrence_id = dr.visit_occurrence_id RETURNING ob.*
 )
-INSERT INTO cds_cdm.observation
+INSERT INTO cdm.observation
     (
         person_id
         , observation_concept_id

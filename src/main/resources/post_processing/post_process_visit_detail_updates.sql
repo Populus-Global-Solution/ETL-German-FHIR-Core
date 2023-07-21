@@ -8,9 +8,9 @@ WITH fr AS
     SELECT
         visit_detail_id
         , lag(visit_detail_source_value, 1) OVER ( PARTITION BY person_id, visit_occurrence_id ORDER BY visit_detail_start_datetime) AS source_value
-    FROM cds_cdm.visit_detail
+    FROM cdm.visit_detail
 )
-UPDATE cds_cdm.visit_detail
+UPDATE cdm.visit_detail
 SET admitting_source_value = fr.source_value
 FROM fr
 WHERE visit_detail.visit_detail_id = fr.visit_detail_id
@@ -30,9 +30,9 @@ WITH discharge_to AS
     SELECT
         visit_detail_id
         , lead(visit_detail_source_value, 1) OVER (PARTITION BY person_id, visit_occurrence_id ORDER BY visit_detail_start_datetime) AS source_value
-    FROM cds_cdm.visit_detail
+    FROM cdm.visit_detail
 )
-UPDATE cds_cdm.visit_detail
+UPDATE cdm.visit_detail
 SET discharge_to_source_value = discharge_to.source_value
 FROM discharge_to
 WHERE visit_detail.visit_detail_id=discharge_to.visit_detail_id
@@ -52,9 +52,9 @@ WITH id_order AS
     SELECT
         visit_detail_id
         , lag(visit_detail_id, 1) OVER (PARTITION BY person_id, visit_occurrence_id ORDER BY visit_detail_start_datetime) AS previous_visit_detail_id
-   FROM cds_cdm.visit_detail
+   FROM cdm.visit_detail
 )
-UPDATE cds_cdm.visit_detail
+UPDATE cdm.visit_detail
 SET preceding_visit_detail_id = id_order.previous_visit_detail_id
 FROM id_order
 WHERE visit_detail.visit_detail_id=id_order.visit_detail_id

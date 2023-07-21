@@ -13,11 +13,11 @@ JOIN pg_catalog.pg_class c ON
 JOIN pg_catalog.pg_class p ON
 	p."oid" = confrelid
 WHERE
-	conname = 'fpk_procedure_person'
+	conname = 'fpk_procedure_person_id'
 	AND confdeltype = 'c')
 	THEN
-ALTER TABLE cds_cdm.procedure_occurrence DROP CONSTRAINT fpk_procedure_person;
-ALTER TABLE cds_cdm.procedure_occurrence ADD CONSTRAINT fpk_procedure_person FOREIGN KEY (person_id) REFERENCES cds_cdm.person(person_id) ON
+ALTER TABLE cdm.procedure_occurrence DROP CONSTRAINT fpk_procedure_person_id;
+ALTER TABLE cdm.procedure_occurrence ADD CONSTRAINT fpk_procedure_person_id FOREIGN KEY (person_id) REFERENCES cdm.person(person_id) ON
 DELETE
 	CASCADE;
 END IF;
@@ -38,11 +38,11 @@ JOIN pg_catalog.pg_class c ON
 JOIN pg_catalog.pg_class p ON
 	p."oid" = confrelid
 WHERE
-	conname = 'fpk_drug_person'
+	conname = 'fpk_drug_exposure_person_id'
 	AND confdeltype = 'c')
 	THEN
-ALTER TABLE cds_cdm.drug_exposure DROP CONSTRAINT fpk_drug_person;
-ALTER TABLE cds_cdm.drug_exposure ADD CONSTRAINT fpk_drug_person FOREIGN KEY (person_id) REFERENCES cds_cdm.person(person_id) ON
+ALTER TABLE cdm.drug_exposure DROP CONSTRAINT fpk_drug_exposure_person_id;
+ALTER TABLE cdm.drug_exposure ADD CONSTRAINT fpk_drug_exposure_person_id FOREIGN KEY (person_id) REFERENCES cdm.person(person_id) ON
 DELETE
 	CASCADE;
 END IF;
@@ -63,11 +63,11 @@ JOIN pg_catalog.pg_class c ON
 JOIN pg_catalog.pg_class p ON
 	p."oid" = confrelid
 WHERE
-	conname = 'fpk_observation_person'
+	conname = 'fpk_observation_person_id'
 	AND confdeltype = 'c')
 	THEN
-ALTER TABLE cds_cdm.observation DROP CONSTRAINT fpk_observation_person;
-ALTER TABLE cds_cdm.observation ADD CONSTRAINT fpk_observation_person FOREIGN KEY (person_id) REFERENCES cds_cdm.person(person_id) ON
+ALTER TABLE cdm.observation DROP CONSTRAINT fpk_observation_person_id;
+ALTER TABLE cdm.observation ADD CONSTRAINT fpk_observation_person_id FOREIGN KEY (person_id) REFERENCES cdm.person(person_id) ON
 DELETE
 	CASCADE;
 END IF;
@@ -88,11 +88,11 @@ JOIN pg_catalog.pg_class c ON
 JOIN pg_catalog.pg_class p ON
 	p."oid" = confrelid
 WHERE
-	conname = 'fpk_condition_person'
+	conname = 'fpk_condition_occurrence_person_id'
 	AND confdeltype = 'c')
 	THEN
-ALTER TABLE cds_cdm.condition_occurrence DROP CONSTRAINT fpk_condition_person;
-ALTER TABLE cds_cdm.condition_occurrence ADD CONSTRAINT fpk_condition_person FOREIGN KEY (person_id) REFERENCES cds_cdm.person(person_id) ON
+ALTER TABLE cdm.condition_occurrence DROP CONSTRAINT fpk_condition_occurrence_person_id;
+ALTER TABLE cdm.condition_occurrence ADD CONSTRAINT fpk_condition_occurrence_person_id FOREIGN KEY (person_id) REFERENCES cdm.person(person_id) ON
 DELETE
 	CASCADE;
 END IF;
@@ -113,11 +113,11 @@ JOIN pg_catalog.pg_class c ON
 JOIN pg_catalog.pg_class p ON
 	p."oid" = confrelid
 WHERE
-	conname = 'fpk_visit_person'
+	conname = 'fpk_visit_occurrence_person_id'
 	AND confdeltype = 'c')
 	THEN
-ALTER TABLE cds_cdm.visit_occurrence DROP CONSTRAINT fpk_visit_person;
-ALTER TABLE cds_cdm.visit_occurrence ADD CONSTRAINT fpk_visit_person FOREIGN KEY (person_id) REFERENCES cds_cdm.person(person_id) ON
+ALTER TABLE cdm.visit_occurrence DROP CONSTRAINT fpk_visit_occurrence_person_id;
+ALTER TABLE cdm.visit_occurrence ADD CONSTRAINT fpk_visit_occurrence_person_id FOREIGN KEY (person_id) REFERENCES cdm.person(person_id) ON
 DELETE
 	CASCADE;
 END IF;
@@ -138,11 +138,11 @@ JOIN pg_catalog.pg_class c ON
 JOIN pg_catalog.pg_class p ON
 	p."oid" = confrelid
 WHERE
-	conname = 'fpk_v_detail_person'
+	conname = 'fpk_visit_detail_person_id'
 	AND confdeltype = 'c')
 	THEN
-ALTER TABLE cds_cdm.visit_detail DROP CONSTRAINT fpk_v_detail_person;
-ALTER TABLE cds_cdm.visit_detail ADD CONSTRAINT fpk_v_detail_person FOREIGN KEY (person_id) REFERENCES cds_cdm.person(person_id) ON
+ALTER TABLE cdm.visit_detail DROP CONSTRAINT fpk_visit_detail_person_id;
+ALTER TABLE cdm.visit_detail ADD CONSTRAINT fpk_visit_detail_person_id FOREIGN KEY (person_id) REFERENCES cdm.person(person_id) ON
 DELETE
 	CASCADE;
 END IF;
@@ -163,11 +163,11 @@ JOIN pg_catalog.pg_class c ON
 JOIN pg_catalog.pg_class p ON
 	p."oid" = confrelid
 WHERE
-	conname = 'fpk_observation_period_person'
+	conname = 'fpk_observation_period_person_id'
 	AND confdeltype = 'c')
 	THEN
-ALTER TABLE cds_cdm.observation_period DROP CONSTRAINT fpk_observation_period_person;
-ALTER TABLE cds_cdm.observation_period ADD CONSTRAINT fpk_observation_period_person FOREIGN KEY (person_id) REFERENCES cds_cdm.person(person_id) ON
+ALTER TABLE cdm.observation_period DROP CONSTRAINT fpk_observation_period_person_id;
+ALTER TABLE cdm.observation_period ADD CONSTRAINT fpk_observation_period_person_id FOREIGN KEY (person_id) REFERENCES cdm.person(person_id) ON
 DELETE
 	CASCADE;
 END IF;
@@ -188,11 +188,11 @@ JOIN pg_catalog.pg_class c ON
 JOIN pg_catalog.pg_class p ON
 	p."oid" = confrelid
 WHERE
-	conname = 'fpk_measurement_person'
+	conname = 'fpk_measurement_person_id'
 	AND confdeltype = 'c')
 	THEN
-ALTER TABLE cds_cdm.measurement DROP CONSTRAINT fpk_measurement_person;
-ALTER TABLE cds_cdm.measurement ADD CONSTRAINT fpk_measurement_person FOREIGN KEY (person_id) REFERENCES cds_cdm.person(person_id) ON
+ALTER TABLE cdm.measurement DROP CONSTRAINT fpk_measurement_person_id;
+ALTER TABLE cdm.measurement ADD CONSTRAINT fpk_measurement_person_id FOREIGN KEY (person_id) REFERENCES cdm.person(person_id) ON
 DELETE
 	CASCADE;
 END IF;
@@ -213,11 +213,11 @@ JOIN pg_catalog.pg_class c ON
 JOIN pg_catalog.pg_class p ON
 	p."oid" = confrelid
 WHERE
-	conname = 'fpk_death_person'
+	conname = 'fpk_death_person_id'
 	AND confdeltype = 'c')
 	THEN
-ALTER TABLE cds_cdm.death DROP CONSTRAINT fpk_death_person;
-ALTER TABLE cds_cdm.death ADD CONSTRAINT fpk_death_person FOREIGN KEY (person_id) REFERENCES cds_cdm.person(person_id) ON
+ALTER TABLE cdm.death DROP CONSTRAINT fpk_death_person_id;
+ALTER TABLE cdm.death ADD CONSTRAINT fpk_death_person_id FOREIGN KEY (person_id) REFERENCES cdm.person(person_id) ON
 DELETE
 	CASCADE;
 END IF;
@@ -238,11 +238,11 @@ JOIN pg_catalog.pg_class c ON
 JOIN pg_catalog.pg_class p ON
 	p."oid" = confrelid
 WHERE
-	conname = 'fpk_device_person'
+	conname = 'fpk_device_exposure_person_id'
 	AND confdeltype = 'c')
 	THEN
-ALTER TABLE cds_cdm.device_exposure DROP CONSTRAINT fpk_device_person;
-ALTER TABLE cds_cdm.device_exposure ADD CONSTRAINT fpk_device_person FOREIGN KEY (person_id) REFERENCES cds_cdm.person(person_id) ON
+ALTER TABLE cdm.device_exposure DROP CONSTRAINT fpk_device_exposure_person_id;
+ALTER TABLE cdm.device_exposure ADD CONSTRAINT fpk_device_exposure_person_id FOREIGN KEY (person_id) REFERENCES cdm.person(person_id) ON
 DELETE
 	CASCADE;
 END IF;
@@ -265,11 +265,11 @@ JOIN pg_catalog.pg_class c ON
 JOIN pg_catalog.pg_class p ON
 	p."oid" = confrelid
 WHERE
-	conname = 'fpk_procedure_visit'
+	conname = 'fpk_procedure_occurrence_visit_id'
 	AND confdeltype = 'n')
 	THEN
-ALTER TABLE cds_cdm.procedure_occurrence DROP CONSTRAINT fpk_procedure_visit;
-ALTER TABLE cds_cdm.procedure_occurrence ADD CONSTRAINT fpk_procedure_visit FOREIGN KEY (visit_occurrence_id) REFERENCES cds_cdm.visit_occurrence(visit_occurrence_id)
+ALTER TABLE cdm.procedure_occurrence DROP CONSTRAINT fpk_procedure_occurrence_visit_id;
+ALTER TABLE cdm.procedure_occurrence ADD CONSTRAINT fpk_procedure_occurrence_visit_id FOREIGN KEY (visit_occurrence_id) REFERENCES cdm.visit_occurrence(visit_occurrence_id)
 ON DELETE SET NULL;
 END IF;
 END
@@ -289,11 +289,11 @@ JOIN pg_catalog.pg_class c ON
 JOIN pg_catalog.pg_class p ON
 	p."oid" = confrelid
 WHERE
-	conname = 'fpk_drug_visit'
+	conname = 'fpk_drug_exposure_visit_occurrence_id'
 	AND confdeltype = 'n')
 	THEN
-ALTER TABLE cds_cdm.drug_exposure DROP CONSTRAINT fpk_drug_visit;
-ALTER TABLE cds_cdm.drug_exposure ADD CONSTRAINT fpk_drug_visit FOREIGN KEY (visit_occurrence_id) REFERENCES cds_cdm.visit_occurrence(visit_occurrence_id)
+ALTER TABLE cdm.drug_exposure DROP CONSTRAINT fpk_drug_exposure_visit_occurrence_id;
+ALTER TABLE cdm.drug_exposure ADD CONSTRAINT fpk_drug_exposure_visit_occurrence_id FOREIGN KEY (visit_occurrence_id) REFERENCES cdm.visit_occurrence(visit_occurrence_id)
 ON DELETE SET NULL;
 END IF;
 END
@@ -313,11 +313,11 @@ JOIN pg_catalog.pg_class c ON
 JOIN pg_catalog.pg_class p ON
 	p."oid" = confrelid
 WHERE
-	conname = 'fpk_observation_visit'
+	conname = 'fpk_observation_visit_occurrence_id'
 	AND confdeltype = 'n')
 	THEN
-ALTER TABLE cds_cdm.observation DROP CONSTRAINT fpk_observation_visit;
-ALTER TABLE cds_cdm.observation ADD CONSTRAINT fpk_observation_visit FOREIGN KEY (visit_occurrence_id) REFERENCES cds_cdm.visit_occurrence(visit_occurrence_id)
+ALTER TABLE cdm.observation DROP CONSTRAINT fpk_observation_visit_occurrence_id;
+ALTER TABLE cdm.observation ADD CONSTRAINT fpk_observation_visit_occurrence_id FOREIGN KEY (visit_occurrence_id) REFERENCES cdm.visit_occurrence(visit_occurrence_id)
 ON DELETE SET NULL;
 END IF;
 END
@@ -337,11 +337,11 @@ JOIN pg_catalog.pg_class c ON
 JOIN pg_catalog.pg_class p ON
 	p."oid" = confrelid
 WHERE
-	conname = 'fpk_condition_visit'
+	conname = 'fpk_condition_occurrence_visit_occurrence_id'
 	AND confdeltype = 'n')
 	THEN
-ALTER TABLE cds_cdm.condition_occurrence DROP CONSTRAINT fpk_condition_visit;
-ALTER TABLE cds_cdm.condition_occurrence ADD CONSTRAINT fpk_condition_visit FOREIGN KEY (visit_occurrence_id) REFERENCES cds_cdm.visit_occurrence(visit_occurrence_id)
+ALTER TABLE cdm.condition_occurrence DROP CONSTRAINT fpk_condition_occurrence_visit_occurrence_id;
+ALTER TABLE cdm.condition_occurrence ADD CONSTRAINT fpk_condition_occurrence_visit_occurrence_id FOREIGN KEY (visit_occurrence_id) REFERENCES cdm.visit_occurrence(visit_occurrence_id)
 ON DELETE SET NULL;
 END IF;
 END
@@ -361,11 +361,11 @@ JOIN pg_catalog.pg_class c ON
 JOIN pg_catalog.pg_class p ON
 	p."oid" = confrelid
 WHERE
-	conname = 'fpd_v_detail_visit'
+	conname = 'fpk_visit_detail_visit_occurrence_id'
 	AND confdeltype = 'c')
 	THEN
-ALTER TABLE cds_cdm.visit_detail DROP CONSTRAINT fpd_v_detail_visit;
-ALTER TABLE cds_cdm.visit_detail ADD CONSTRAINT fpd_v_detail_visit FOREIGN KEY (visit_occurrence_id) REFERENCES cds_cdm.visit_occurrence(visit_occurrence_id) ON
+ALTER TABLE cdm.visit_detail DROP CONSTRAINT fpk_visit_detail_visit_occurrence_id;
+ALTER TABLE cdm.visit_detail ADD CONSTRAINT fpk_visit_detail_visit_occurrence_id FOREIGN KEY (visit_occurrence_id) REFERENCES cdm.visit_occurrence(visit_occurrence_id) ON
 DELETE
 	CASCADE;
 END IF;
@@ -386,11 +386,11 @@ JOIN pg_catalog.pg_class c ON
 JOIN pg_catalog.pg_class p ON
 	p."oid" = confrelid
 WHERE
-	conname = 'fpk_measurement_visit'
+	conname = 'fpk_measurement_visit_occurrence_id'
 	AND confdeltype = 'n')
 	THEN
-ALTER TABLE cds_cdm.measurement DROP CONSTRAINT fpk_measurement_visit;
-ALTER TABLE cds_cdm.measurement ADD CONSTRAINT fpk_measurement_visit FOREIGN KEY (visit_occurrence_id) REFERENCES cds_cdm.visit_occurrence(visit_occurrence_id)
+ALTER TABLE cdm.measurement DROP CONSTRAINT fpk_measurement_visit_occurrence_id;
+ALTER TABLE cdm.measurement ADD CONSTRAINT fpk_measurement_visit_occurrence_id FOREIGN KEY (visit_occurrence_id) REFERENCES cdm.visit_occurrence(visit_occurrence_id)
 ON DELETE SET NULL;
 END IF;
 END
@@ -410,11 +410,11 @@ JOIN pg_catalog.pg_class c ON
 JOIN pg_catalog.pg_class p ON
 	p."oid" = confrelid
 WHERE
-	conname = 'fpk_device_person'
+	conname = 'fpk_device_exposure_person_id'
 	AND confdeltype = 'n')
 	THEN
-ALTER TABLE cds_cdm.device_exposure DROP CONSTRAINT fpk_device_visit;
-ALTER TABLE cds_cdm.device_exposure ADD CONSTRAINT fpk_device_visit FOREIGN KEY (visit_occurrence_id) REFERENCES cds_cdm.visit_occurrence(visit_occurrence_id)
+ALTER TABLE cdm.device_exposure DROP CONSTRAINT fpk_device_exposure_person_id;
+ALTER TABLE cdm.device_exposure ADD CONSTRAINT fpk_device_exposure_person_id FOREIGN KEY (visit_occurrence_id) REFERENCES cdm.visit_occurrence(visit_occurrence_id)
 ON DELETE SET NULL;
 END IF;
 END

@@ -173,7 +173,7 @@ WITH primary_insert AS
     (
 INSERT
 	INTO
-		cds_cdm.fact_relationship(
+		cdm.fact_relationship(
 domain_concept_id_1
 		, fact_id_1
 		, domain_concept_id_2
@@ -199,7 +199,7 @@ domain_concept_id_1
     )
 INSERT
 	INTO
-	cds_cdm.fact_relationship
+	cdm.fact_relationship
     (domain_concept_id_1
 	, fact_id_1
 	, domain_concept_id_2

@@ -16,7 +16,7 @@ WITH post_process AS
 	)
 , upsert AS
 (
-	UPDATE cds_cdm.observation_period op
+	UPDATE cdm.observation_period op
 	SET observation_period_start_date =
             CASE
                 WHEN observation_period_start_date > pp.startDate
@@ -32,7 +32,7 @@ WITH post_process AS
 	FROM post_process pp
 	WHERE pp.omop_id = op.person_id RETURNING op.*
 )
-INSERT INTO cds_cdm.observation_Period
+INSERT INTO cdm.observation_Period
 (
 	person_id
 	, observation_period_start_date

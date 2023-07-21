@@ -203,7 +203,7 @@ domain_concept_id_1
 		RETURNING *
 )
 INSERT
-	INTO cds_cdm.fact_relationship
+	INTO cdm.fact_relationship
 (
     domain_concept_id_1
 	, fact_id_1

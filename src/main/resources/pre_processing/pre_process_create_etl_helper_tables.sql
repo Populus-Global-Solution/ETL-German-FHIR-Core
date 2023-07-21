@@ -31,10 +31,10 @@ CREATE materialized VIEW IF NOT EXISTS cds_etl_helper.snomed_vaccine_standard_lo
          c2.domain_id        AS standard_vaccine_domain_id,
          c1.valid_start_date AS snomed_valid_start_date,
          c1.valid_end_date   AS snomed_valid_end_date
-  FROM   cds_cdm.concept c1
-  JOIN   cds_cdm.concept_relationship cr
+  FROM   cdm.concept c1
+  JOIN   cdm.concept_relationship cr
   ON     c1.concept_id = cr.concept_id_1
-  JOIN   cds_cdm.concept c2
+  JOIN   cdm.concept c2
   ON     cr.concept_id_2 = c2.concept_id
   WHERE  1 = 1
   AND    c1.vocabulary_id::text = 'SNOMED'::text
@@ -53,10 +53,10 @@ CREATE materialized VIEW IF NOT EXISTS cds_etl_helper.snomed_race_standard_looku
   SELECT c1.concept_code AS snomed_code,
          c1.concept_id   AS snomed_concept_id,
          cr.concept_id_2 AS standard_race_concept_id
-  FROM   cds_cdm.concept c1
-  JOIN   cds_cdm.concept_relationship cr
+  FROM   cdm.concept c1
+  JOIN   cdm.concept_relationship cr
   ON     c1.concept_id = cr.concept_id_1
-  JOIN   cds_cdm.concept c2
+  JOIN   cdm.concept c2
   ON     cr.concept_id_2 = c2.concept_id
   WHERE  1 = 1
   AND    c1.vocabulary_id::text = 'SNOMED'::text

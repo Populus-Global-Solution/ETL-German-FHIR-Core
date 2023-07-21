@@ -288,7 +288,7 @@ domain_concept_id_1
 secondary_insert AS (
 INSERT
 	INTO
-		cds_cdm.fact_relationship
+		cdm.fact_relationship
 (
     domain_concept_id_1
 		, fact_id_1

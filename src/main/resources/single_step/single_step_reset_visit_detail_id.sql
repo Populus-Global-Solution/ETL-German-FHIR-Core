@@ -23,7 +23,7 @@ SELECT measurement_id,
        measurement_source_concept_id,
        unit_source_value,
        value_source_value
-FROM cds_cdm.measurement;
+FROM cdm.measurement;
 
 TRUNCATE measurement;
 
@@ -56,7 +56,7 @@ SELECT observation_id,
        observation_source_concept_id,
        unit_source_value,
        qualifier_source_value
-FROM cds_cdm.observation;
+FROM cdm.observation;
 
 TRUNCATE observation;
 
@@ -89,7 +89,7 @@ SELECT condition_occurrence_id,
        condition_status_concept_id,
        fhir_logical_id,
        fhir_identifier
-FROM cds_cdm.condition_occurrence;
+FROM cdm.condition_occurrence;
 
 TRUNCATE condition_occurrence;
 
@@ -120,7 +120,7 @@ SELECT procedure_occurrence_id,
        modifier_source_value,
        fhir_logical_id,
        fhir_identifier
-FROM cds_cdm.procedure_occurrence;
+FROM cdm.procedure_occurrence;
 
 TRUNCATE procedure_occurrence;
 
@@ -160,7 +160,7 @@ SELECT drug_exposure_id,
        dose_unit_source_value,
        fhir_logical_id,
        fhir_identifier
-FROM cds_cdm.drug_exposure;
+FROM cdm.drug_exposure;
 
 TRUNCATE drug_exposure;
 

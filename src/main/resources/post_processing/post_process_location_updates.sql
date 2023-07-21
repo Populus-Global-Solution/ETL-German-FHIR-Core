@@ -27,11 +27,11 @@ WITH post_locations AS
         , pl.line2
         , pl.county
     FROM post_locations pl
-    LEFT JOIN cds_cdm.location l
+    LEFT JOIN cdm.location l
            ON l.location_source_value = pl.source_value
     WHERE l.location_id IS NULL
 )
-INSERT INTO cds_cdm.location
+INSERT INTO cdm.location
     (
         city
         , zip
@@ -81,7 +81,7 @@ WITH location_reference AS
         --, lr.fhir_identifier
         , l.location_id
     FROM location_reference lr
-    LEFT JOIN cds_cdm.location l
+    LEFT JOIN cdm.location l
            ON l.city = lr.city
           AND l.zip = lr.zip
 )

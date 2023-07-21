@@ -118,13 +118,17 @@ public class InitOmopDb implements Tasklet {
   /** Updates the cdm_source table in OMOP CDM. */
   private void importToCdmSourceTable() {
     var importStr =
-        "INSERT INTO cdm_source (cdm_source_name,cdm_etl_reference,source_release_date,cdm_version,vocabulary_version)VALUES(?,?,?,?,?);";
+        "INSERT INTO cdm_source (cdm_source_name,cdm_source_abbreviation,cdm_holder,cdm_etl_reference,source_release_date,cdm_release_date,cdm_version,cdm_version_concept_id,vocabulary_version)VALUES(?,?,?,?,?,?,?,?,?);";
     jdbcTemplate.update(
         importStr,
         "FHIR-to-OMOP " + LocalDateTime.now().toString(),
+        "FtO",
+        "N/A",
         jobVersion,
         LocalDate.now(),
+        LocalDate.now(),
         "v5.3.1",
+        1147638,
         "ICD10GM 2020");
   }
 }

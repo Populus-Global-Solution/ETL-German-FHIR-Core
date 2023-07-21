@@ -16,7 +16,7 @@ WITH dev_pro AS
        JOIN   procedure_occurrence po
        ON     de.fhir_logical_id = po.fhir_logical_id ) ,primary_insert AS
 (
-            insert INTO cds_cdm.fact_relationship
+            insert INTO cdm.fact_relationship
                         (
                                     domain_concept_id_1 ,
                                     fact_id_1 ,
@@ -40,7 +40,7 @@ WITH dev_pro AS
             FROM   dev_pro dp
             WHERE  device_exposure_id IS NOT NULL
             AND    procedure_occurrence_id IS NOT NULL returning *)
-INSERT INTO cds_cdm.fact_relationship
+INSERT INTO cdm.fact_relationship
             (
                         domain_concept_id_1 ,
                         fact_id_1 ,
