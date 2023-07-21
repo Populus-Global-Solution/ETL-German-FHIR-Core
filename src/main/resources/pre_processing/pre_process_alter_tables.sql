@@ -78,7 +78,7 @@ ALTER TABLE cdm.observation DROP CONSTRAINT fpk_observation_visit_occurrence_id;
 ALTER TABLE cdm.observation ADD CONSTRAINT fpk_observation_visit_occurrence_id FOREIGN KEY (visit_occurrence_id) REFERENCES cdm.visit_occurrence(visit_occurrence_id) ON DELETE CASCADE;
 
 ALTER TABLE cdm.condition_occurrence DROP CONSTRAINT fpk_condition_occurrence_visit_occurrence_id;
-ALTER TABLE cdm.condition_occurrence ADD CONSTRAINT fpk_condition_ocurrence_visit_occurrence_id FOREIGN KEY (visit_occurrence_id) REFERENCES cdm.visit_occurrence(visit_occurrence_id) ON DELETE CASCADE;
+ALTER TABLE cdm.condition_occurrence ADD CONSTRAINT fpk_condition_occurrence_visit_occurrence_id FOREIGN KEY (visit_occurrence_id) REFERENCES cdm.visit_occurrence(visit_occurrence_id) ON DELETE CASCADE;
 
 ALTER TABLE cdm.visit_detail DROP CONSTRAINT fpk_visit_detail_visit_occurrence_id;
 ALTER TABLE cdm.visit_detail ADD CONSTRAINT fpk_visit_detail_visit_occurrence_id FOREIGN KEY (visit_occurrence_id) REFERENCES cdm.visit_occurrence(visit_occurrence_id) ON DELETE CASCADE;
