@@ -1,8 +1,5 @@
 package org.miracum.etl.fhirtoomop;
 
-import static org.miracum.etl.fhirtoomop.Constants.STEP_ENCOUNTER_DEPARTMENT_KONTAKT;
-import static org.miracum.etl.fhirtoomop.Constants.STEP_ENCOUNTER_INSTITUTION_KONTAKT;
-
 import ca.uhn.fhir.parser.IParser;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.gclient.IQuery;
@@ -17,7 +14,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import lombok.NoArgsConstructor;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.r4.model.Bundle;
-import org.hl7.fhir.r4.model.Encounter;
 import org.miracum.etl.fhirtoomop.model.FhirPsqlResource;
 import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.item.ItemStreamException;
@@ -89,11 +85,6 @@ public class FhirServerItemReader extends AbstractPagingItemReader<FhirPsqlResou
             .forResource(resourceTypeName)
             .returnBundle(Bundle.class)
             .count(getPageSize());
-    if (stepName.equals(STEP_ENCOUNTER_DEPARTMENT_KONTAKT)) {
-      return query.and(Encounter.TYPE.exactly().code("abteilungskontakt"));
-    } else if (stepName.equals(STEP_ENCOUNTER_INSTITUTION_KONTAKT)) {
-      return query.and(Encounter.TYPE.exactly().code("einrichtungskontakt"));
-    }
     return query;
   }
 
