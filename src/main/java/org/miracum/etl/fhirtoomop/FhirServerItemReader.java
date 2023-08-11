@@ -1,6 +1,7 @@
 package org.miracum.etl.fhirtoomop;
 
 import ca.uhn.fhir.parser.IParser;
+import ca.uhn.fhir.rest.api.SortSpec;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.gclient.IQuery;
 import ca.uhn.fhir.rest.param.DateRangeParam;
@@ -12,14 +13,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import lombok.NoArgsConstructor;
+import org.hl7.fhir.instance.model.api.IAnyResource;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.r4.model.Bundle;
+import org.hl7.fhir.r4.model.Condition;
+import org.hl7.fhir.r4.model.Patient;
 import org.miracum.etl.fhirtoomop.model.FhirPsqlResource;
 import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.item.ItemStreamException;
 import org.springframework.batch.item.database.AbstractPagingItemReader;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
+
+import static org.hl7.fhir.r4.model.Enumerations.*;
 
 @NoArgsConstructor
 public class FhirServerItemReader extends AbstractPagingItemReader<FhirPsqlResource>
@@ -84,6 +90,7 @@ public class FhirServerItemReader extends AbstractPagingItemReader<FhirPsqlResou
             .search()
             .forResource(resourceTypeName)
             .returnBundle(Bundle.class)
+            .sort(new SortSpec(IAnyResource.SP_RES_ID))
             .count(getPageSize());
     return query;
   }
