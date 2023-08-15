@@ -1,6 +1,7 @@
 --Create cds_etl_helper.post_process_map table and its indexies
 DO $$
 BEGIN
+CREATE SCHEMA IF NOT EXISTS cds_etl_helper;
 CREATE TABLE IF NOT EXISTS cds_etl_helper.post_process_map(
 data_id bigserial, type varchar(64) not null, data_one varchar(255), data_two varchar(255),
 omop_id bigint, omop_table varchar(64) not null, fhir_logical_id varchar(250), fhir_identifier varchar(250));
