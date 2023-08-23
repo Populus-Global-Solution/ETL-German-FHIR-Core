@@ -117,6 +117,7 @@ public class InitOmopDb implements Tasklet {
 
   /** Updates the cdm_source table in OMOP CDM. */
   private void importToCdmSourceTable() {
+    jdbcTemplate.execute("TRUNCATE cdm_source;");
     var importStr =
         "INSERT INTO cdm_source (cdm_source_name,cdm_source_abbreviation,cdm_holder,cdm_etl_reference,source_release_date,cdm_release_date,cdm_version,cdm_version_concept_id,vocabulary_version)VALUES(?,?,?,?,?,?,?,?,?);";
     jdbcTemplate.update(
