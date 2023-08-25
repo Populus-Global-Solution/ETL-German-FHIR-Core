@@ -89,6 +89,7 @@ public class FhirServerItemReader extends AbstractPagingItemReader<FhirPsqlResou
             .forResource(resourceTypeName)
             .returnBundle(Bundle.class)
             .sort(new SortSpec(IAnyResource.SP_RES_ID))
+            .offset(0)
             .count(getPageSize());
     return query;
   }
