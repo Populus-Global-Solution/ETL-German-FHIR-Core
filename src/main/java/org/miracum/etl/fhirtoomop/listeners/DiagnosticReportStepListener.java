@@ -63,8 +63,8 @@ public class DiagnosticReportStepListener implements StepExecutionListener {
   public DiagnosticReportStepListener(
       OmopRepository repositories,
       DbMappings dbMappings,
-      Boolean dictionaryLoadInRam,
-      Boolean bulkload,
+      @Qualifier("dictionaryLoadInRam") Boolean dictionaryLoadInRam,
+      @Qualifier("bulkload") Boolean bulkload,
       DataSource dataSource) {
     this.repositories = repositories;
     this.dbMappings = dbMappings;

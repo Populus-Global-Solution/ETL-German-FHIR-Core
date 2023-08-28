@@ -82,7 +82,7 @@ public class ResourceFhirReferenceUtils {
               subjectLogicalId.isPresent()
                   ? subjectLogicalId.get().getValue()
                   : patientLogicalId.get().getValue());
-      return "pat-" + reference.getReferenceElement().getIdPart();
+      return "pat-" + reference.getReferenceElement().getIdPart().replace("urn:uuid:", "");
     }
   }
 

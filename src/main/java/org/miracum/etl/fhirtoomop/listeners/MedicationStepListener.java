@@ -7,6 +7,7 @@ import org.miracum.etl.fhirtoomop.repository.OmopRepository;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.StepExecutionListener;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -37,7 +38,9 @@ public class MedicationStepListener implements StepExecutionListener {
    * @param bulkload flag to differentiate between bulk load or incremental load
    */
   public MedicationStepListener(
-      OmopRepository repositories, IIdMappings idMappings, Boolean bulkload) {
+      OmopRepository repositories,
+      IIdMappings idMappings,
+      @Qualifier("bulkload") Boolean bulkload) {
     this.repositories = repositories;
     this.idMappings = idMappings;
     this.bulkload = bulkload;

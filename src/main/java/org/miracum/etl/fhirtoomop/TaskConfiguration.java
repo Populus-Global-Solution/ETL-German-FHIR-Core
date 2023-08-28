@@ -156,6 +156,11 @@ public class TaskConfiguration {
     return this.bulkload;
   }
 
+  @Bean
+  public Boolean dictionaryLoadInRam() {
+    return this.dictionaryLoadInRam;
+  }
+
   /**
    * Constructor for objects of the class TaskConfiguration.
    *

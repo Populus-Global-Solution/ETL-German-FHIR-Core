@@ -36,6 +36,7 @@ import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.batch.core.metrics.BatchMetrics;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -93,7 +94,7 @@ public class FhirToOmopJobListener implements JobExecutionListener {
       OmopRepository omopRepository,
       DataSource inputDataSource,
       DataSource outputDataSource,
-      Boolean bulkLoad) {
+      @Qualifier("bulkload") Boolean bulkLoad) {
     this.omopRepository = omopRepository;
     this.inputDataSource = inputDataSource;
     this.outputDataSource = outputDataSource;
