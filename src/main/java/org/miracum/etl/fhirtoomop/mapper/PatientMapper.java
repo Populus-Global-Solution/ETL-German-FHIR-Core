@@ -109,6 +109,16 @@ public class PatientMapper implements FhirMapper<Patient> {
       noFhirReferenceCounter.increment();
       return null;
     }
+
+    var goldenTag =
+        srcPatient
+            .getMeta()
+            .getTag("http://hapifhir.io/fhir/NamingSystem/mdm-record-status", "GOLDEN_RECORD");
+    if (goldenTag != null) {
+      log.info("Golden Resource found [{}]. Skip Resource.", patientLogicId);
+      return null;
+    }
+
     var ageExtensionMap = extractAgeExtension(srcPatient);
     var ageAtDiagnosis = setAgeAtDiagnosis(patientLogicId, patientSourceIdentifier);
     var realBirthDate = extractBirthDate(srcPatient);
