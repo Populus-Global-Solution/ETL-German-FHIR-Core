@@ -74,6 +74,12 @@ public class InitOmopDb implements Tasklet {
     executeSqlScripts.executeSQLScript(addColumns);
     executeSqlScripts.executeSQLScript(addIndex);
     executeSqlScripts.executeSQLScript(alterMedicationIdMap);
+
+    if (bulkload) {
+      Resource makeIdentities =
+          new ClassPathResource("pre_processing/pre_process_alter_on_bulk.sql");
+      executeSqlScripts.executeSQLScript(makeIdentities);
+    }
   }
 
   /**
