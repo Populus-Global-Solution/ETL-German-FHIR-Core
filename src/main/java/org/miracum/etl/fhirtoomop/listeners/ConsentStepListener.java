@@ -59,8 +59,8 @@ public class ConsentStepListener implements StepExecutionListener {
   public ConsentStepListener(
       OmopRepository repositories,
       DbMappings dbMappings,
-      @Qualifier("dictionaryLoadInRam") Boolean dictionaryLoadInRam,
-      @Qualifier("bulkload") Boolean bulkload,
+      Boolean dictionaryLoadInRam,
+      Boolean bulkload,
       DataSource dataSource) {
     this.repositories = repositories;
     this.dbMappings = dbMappings;

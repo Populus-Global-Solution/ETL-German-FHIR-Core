@@ -62,14 +62,16 @@ public class ConditionStepListener implements StepExecutionListener {
   public ConditionStepListener(
       OmopRepository repositories,
       DbMappings dbMappings,
-      @Qualifier("dictionaryLoadInRam") Boolean dictionaryLoadInRam,
-      @Qualifier("bulkload") Boolean bulkload,
+      Boolean dictionaryLoadInRam,
+      Boolean bulkload,
       DataSource dataSource) {
     this.repositories = repositories;
     this.dbMappings = dbMappings;
     this.dictionaryLoadInRam = dictionaryLoadInRam;
     this.bulkload = bulkload;
     this.dataSource = dataSource;
+
+    log.info("Bulkload {} and dictionary {}", bulkload, dictionaryLoadInRam);
   }
 
   /**

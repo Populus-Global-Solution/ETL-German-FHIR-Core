@@ -10,7 +10,6 @@ import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.StepExecutionListener;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.caffeine.CaffeineCache;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
@@ -42,8 +41,7 @@ public class PatientStepListener implements StepExecutionListener {
    * @param bulkload flag to differentiate between bulk load or incremental load
    */
   @Autowired
-  public PatientStepListener(
-      OmopRepository repositories, DbMappings dbMappings, @Qualifier("bulkload") Boolean bulkload) {
+  public PatientStepListener(OmopRepository repositories, DbMappings dbMappings, Boolean bulkload) {
     this.repositories = repositories;
     this.dbMappings = dbMappings;
     this.bulkload = bulkload;

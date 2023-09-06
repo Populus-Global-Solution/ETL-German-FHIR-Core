@@ -58,8 +58,8 @@ public class EncounterDepartmentCaseStepListener implements StepExecutionListene
   public EncounterDepartmentCaseStepListener(
       OmopRepository repositories,
       DbMappings dbMappings,
-      @Qualifier("dictionaryLoadInRam") Boolean dictionaryLoadInRam,
-      @Qualifier("bulkload") Boolean bulkload,
+      Boolean dictionaryLoadInRam,
+      Boolean bulkload,
       DataSource dataSource) {
     this.repositories = repositories;
     this.dbMappings = dbMappings;

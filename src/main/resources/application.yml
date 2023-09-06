@@ -170,7 +170,12 @@ app:
   bulkload:
     enabled: true
   dictionaryLoadInRam:
-    enabled: true
+    enabled: false
   writeMedicationStatement:
+    enabled: true
+  goldenResourceMerging:
+    enabled: true
+  goldenResourceTypes: "Patient"
+  treatPossibleMatchesAsMatch:
     enabled: true
   startSingleStep: "" # Observation, Immunization, DiagnosticReport, Condition, MedicationAdministration, MedicationStatement, DepartmentCase or Procedure

@@ -8,7 +8,6 @@ import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.StepExecutionListener;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.caffeine.CaffeineCache;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
@@ -45,8 +44,8 @@ public class EncounterMainStepListener implements StepExecutionListener {
   public EncounterMainStepListener(
       OmopRepository repositories,
       DbMappings dbMappings,
-      @Qualifier("dictionaryLoadInRam") Boolean dictionaryLoadInRam,
-      @Qualifier("bulkload") Boolean bulkload) {
+      Boolean dictionaryLoadInRam,
+      Boolean bulkload) {
     this.repositories = repositories;
     this.dbMappings = dbMappings;
     this.dictionaryLoadInRam = dictionaryLoadInRam;

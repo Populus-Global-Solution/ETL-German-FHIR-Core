@@ -142,6 +142,11 @@ public class ObservationMapper implements FhirMapper<Observation> {
       return null;
     }
 
+    if (!srcObservation.hasCategory() || srcObservation.getCategory().isEmpty()) {
+      log.warn("No [Category] found for {}. Invalid resource. Please Check.", observationLogicId);
+      return null;
+    }
+
     if (bulkload.equals(Boolean.FALSE)) {
       deleteExistingLabObservations(observationLogicId, observationSourceIdentifier);
       if (isDeleted) {
@@ -1352,10 +1357,6 @@ public class ObservationMapper implements FhirMapper<Observation> {
    * @return category from FHIR Observation resource
    */
   private Coding getCategoryCoding(Observation srcObservation, String observationLogicId) {
-    if (!srcObservation.hasCategory() || srcObservation.getCategory().isEmpty()) {
-      log.warn("No [Category] found for {}. Invalid resource. Please Check.", observationLogicId);
-      return null;
-    }
     var categories = srcObservation.getCategory();
     for (var category : categories) {
       var categoryCode =

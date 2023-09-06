@@ -1,18 +1,6 @@
 package org.miracum.etl.fhirtoomop.mapper;
 
-import static org.miracum.etl.fhirtoomop.Constants.CONCEPT_EHR_RECORD_STATUS_DECEASED;
-import static org.miracum.etl.fhirtoomop.Constants.CONCEPT_GENDER_UNKNOWN;
-import static org.miracum.etl.fhirtoomop.Constants.CONCEPT_HISPANIC_OR_LATINO;
-import static org.miracum.etl.fhirtoomop.Constants.CONCEPT_NO_MATCHING_CONCEPT;
-import static org.miracum.etl.fhirtoomop.Constants.CONCEPT_UNKNOWN_RACIAL_GROUP;
-import static org.miracum.etl.fhirtoomop.Constants.ETHNICITY_SOURCE_HISPANIC_OR_LATINO;
-import static org.miracum.etl.fhirtoomop.Constants.ETHNICITY_SOURCE_MIXED;
-import static org.miracum.etl.fhirtoomop.Constants.MAX_LOCATION_CITY_LENGTH;
-import static org.miracum.etl.fhirtoomop.Constants.MAX_LOCATION_COUNTRY_LENGTH;
-import static org.miracum.etl.fhirtoomop.Constants.MAX_LOCATION_STATE_LENGTH;
-import static org.miracum.etl.fhirtoomop.Constants.MAX_LOCATION_ZIP_LENGTH;
-import static org.miracum.etl.fhirtoomop.Constants.MAX_SOURCE_VALUE_LENGTH;
-import static org.miracum.etl.fhirtoomop.Constants.SOURCE_VOCABULARY_ID_GENDER;
+import static org.miracum.etl.fhirtoomop.Constants.*;
 
 import ca.uhn.fhir.fhirpath.IFhirPath;
 import com.google.common.base.Strings;
@@ -62,6 +50,8 @@ public class PatientMapper implements FhirMapper<Patient> {
   private final IFhirPath fhirPath;
   private final Boolean bulkload;
   private final DbMappings dbMappings;
+  private final Boolean goldenMerging;
+  private final Boolean treatPossibleMatchesAsMatch;
 
   @Autowired ResourceOmopReferenceUtils omopReferenceUtils;
   @Autowired ResourceFhirReferenceUtils fhirReferenceUtils;
@@ -83,11 +73,17 @@ public class PatientMapper implements FhirMapper<Patient> {
    * @param dbMappings collections for the intermediate storage of data from OMOP CDM in RAM
    */
   @Autowired
-  public PatientMapper(IFhirPath fhirPath, Boolean bulkload, DbMappings dbMappings) {
-
+  public PatientMapper(
+      IFhirPath fhirPath,
+      Boolean bulkload,
+      DbMappings dbMappings,
+      Boolean goldenMerging,
+      Boolean treatPossibleMatchesAsMatch) {
+    this.goldenMerging = goldenMerging;
     this.fhirPath = fhirPath;
     this.bulkload = bulkload;
     this.dbMappings = dbMappings;
+    this.treatPossibleMatchesAsMatch = treatPossibleMatchesAsMatch;
   }
 
   /**
@@ -110,15 +106,6 @@ public class PatientMapper implements FhirMapper<Patient> {
       return null;
     }
 
-    var goldenTag =
-        srcPatient
-            .getMeta()
-            .getTag("http://hapifhir.io/fhir/NamingSystem/mdm-record-status", "GOLDEN_RECORD");
-    if (goldenTag != null) {
-      log.info("Golden Resource found [{}]. Skip Resource.", patientLogicId);
-      return null;
-    }
-
     var ageExtensionMap = extractAgeExtension(srcPatient);
     var ageAtDiagnosis = setAgeAtDiagnosis(patientLogicId, patientSourceIdentifier);
     var realBirthDate = extractBirthDate(srcPatient);
@@ -138,6 +125,20 @@ public class PatientMapper implements FhirMapper<Patient> {
       deleteExistingPatients(patientLogicId, patientSourceIdentifier);
       deletedFhirReferenceCounter.increment();
       return null;
+    }
+
+    if (goldenMerging && !treatPossibleMatchesAsMatch) {
+      /* If a patient does not have a resource tag we have to check whether the patient has a
+         full MATCH or just a POSSIBLE_MATCH. If they only have a POSSIBLE_MATCH, we treat the
+         patient as a golden resource and continue processing. While treating possible matches as
+         full matches we only fetch the golden resources, so there is no need to do this additional check. */
+      if (srcPatient.getMeta().getTag(GOLDEN_RESOURCE_URL, GOLDEN_RESOURCE) == null) {
+        String goldenResourceId = patientService.getGoldenResourceByFhirLogicalId(patientLogicId);
+
+        if (!goldenResourceId.equals(patientLogicId)) {
+          return null;
+        }
+      }
     }
 
     if (bulkload.equals(Boolean.FALSE)) {
@@ -167,6 +168,7 @@ public class PatientMapper implements FhirMapper<Patient> {
     if (ageAtDiagnosis.getDataOne() != null) {
       wrapper.getPostProcessMap().add(ageAtDiagnosis);
     }
+
     return wrapper;
   }
 

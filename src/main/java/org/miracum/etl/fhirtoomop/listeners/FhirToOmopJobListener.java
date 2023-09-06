@@ -36,7 +36,6 @@ import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.batch.core.metrics.BatchMetrics;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -65,7 +64,7 @@ public class FhirToOmopJobListener implements JobExecutionListener {
   @Value("${app.version}")
   private String version;
 
-  private Boolean bulkLoad;
+  private Boolean bulkload;
 
   @Value("${data.beginDate}")
   private String beginDateStr;
@@ -79,13 +78,15 @@ public class FhirToOmopJobListener implements JobExecutionListener {
   @Value("${app.startSingleStep}")
   private String startSingleStep;
 
+  private Boolean goldenMerging;
+
   /**
    * Constructor for objects of the class FhirToOmopJobListener.
    *
    * @param omopRepository OMOP CDM repositories
    * @param inputDataSource connection data of source database
    * @param outputDataSource connection data of target database
-   * @param bulkLoad flag to differentiate between bulk load or incremental load
+   * @param bulkload flag to differentiate between bulk load or incremental load
    * @param beginDate date from which the data will be read
    * @param endDate date until which the data will be read
    */
@@ -94,11 +95,13 @@ public class FhirToOmopJobListener implements JobExecutionListener {
       OmopRepository omopRepository,
       DataSource inputDataSource,
       DataSource outputDataSource,
-      @Qualifier("bulkload") Boolean bulkLoad) {
+      Boolean bulkload,
+      Boolean goldenMerging) {
     this.omopRepository = omopRepository;
     this.inputDataSource = inputDataSource;
     this.outputDataSource = outputDataSource;
-    this.bulkLoad = bulkLoad;
+    this.bulkload = bulkload;
+    this.goldenMerging = goldenMerging;
   }
 
   /**
@@ -139,7 +142,7 @@ public class FhirToOmopJobListener implements JobExecutionListener {
           String.format(
               format,
               "This Job runs as",
-              Boolean.FALSE.equals(bulkLoad) ? "Incremental Load" : "Bulk Load"));
+              Boolean.FALSE.equals(bulkload) ? "Incremental Load" : "Bulk Load"));
       if (StringUtils.isBlank(fhirBaseUrl)) {
         log.info(String.format(format, "FHIR-Gateway URL", inputConnection.getMetaData().getURL()));
         log.info(String.format(format, "Retrieve FHIR Resources from table", inputTableName));
@@ -157,6 +160,7 @@ public class FhirToOmopJobListener implements JobExecutionListener {
       log.info(String.format(format, "OMOP CDM Version", "v5.3.1"));
       log.info(String.format(format, "ETL Job version", version));
       log.info(String.format(format, "ETL Job starts at", LocalDate.now()));
+      log.info(String.format(format, "Merging Golden Resources", goldenMerging));
       log.info("-".repeat(90));
       Thread.sleep(5000);
     } catch (SQLException e) {
