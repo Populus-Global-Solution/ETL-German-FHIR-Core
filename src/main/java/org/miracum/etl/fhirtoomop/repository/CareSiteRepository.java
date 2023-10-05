@@ -31,4 +31,8 @@ public interface CareSiteRepository extends PagingAndSortingRepository<CareSite,
   default Map<String, CareSite> careSitesMap() {
     return findAll().stream().collect(Collectors.toMap(CareSite::getCareSiteSourceValue, v -> v));
   }
+
+  CareSite findByFhirLogicalId(String fhirLogicalId);
+
+  void deleteByFhirLogicalId(String fhirLogicalId);
 }

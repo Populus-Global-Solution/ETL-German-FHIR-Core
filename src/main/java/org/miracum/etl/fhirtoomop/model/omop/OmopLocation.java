@@ -2,7 +2,10 @@ package org.miracum.etl.fhirtoomop.model.omop;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,9 +24,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Entity
-public class Location {
+@Table(name = "location")
+public class OmopLocation {
   /** A unique identifier for each geographic location. */
   @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "location_id")
   private Long locationId;
 
@@ -50,10 +55,15 @@ public class Location {
   /** The county. */
   private String county;
 
+  private String country_source_value;
+
   /**
    * The verbatim information that is used to uniquely identify the location as it appears in the
    * source data.
    */
   @Column(name = "location_source_value")
   private String locationSourceValue;
+
+  @Column(name = "fhir_logical_id", nullable = true)
+  private String fhirLogicalId;
 }

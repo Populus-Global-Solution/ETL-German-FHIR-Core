@@ -34,6 +34,7 @@ public class CacheManagerConfiguration {
             "patients-identifier",
             "visits-logicalid",
             "visits-identifier",
+            "locations-logicalid",
             "max-id",
             "snomed-vaccine",
             "snomed-race"));

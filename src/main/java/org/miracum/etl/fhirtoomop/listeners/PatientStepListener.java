@@ -77,7 +77,7 @@ public class PatientStepListener implements StepExecutionListener {
   /** Empties the complete OMOP CDM database. */
   private void truncateDb() {
     repositories.getPersonRepository().truncateTable();
-    repositories.getLocationRepository().deleteAll();
+    repositories.getLocationRepository().truncateTable();
     repositories.getPostProcessMapRepository().truncateTable();
     repositories.getFactRelationshipRepository().truncateTable();
     repositories.getMedicationIdRepository().deleteAll();

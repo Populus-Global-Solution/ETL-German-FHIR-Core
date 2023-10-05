@@ -2,6 +2,8 @@ package org.miracum.etl.fhirtoomop.model.omop;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -26,6 +28,7 @@ import lombok.NoArgsConstructor;
 public class CareSite {
   /** A unique identifier for each Care Site. */
   @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "care_site_id")
   private Long careSiteId;
 
@@ -53,4 +56,7 @@ public class CareSite {
   /** The source code for the Place of Service as it appears in the source data. */
   @Column(name = "place_of_service_source_value")
   private String placeOfServiceSourceValue;
+
+  @Column(name = "fhir_logical_id", nullable = true)
+  private String fhirLogicalId;
 }

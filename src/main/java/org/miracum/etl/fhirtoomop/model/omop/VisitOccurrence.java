@@ -71,7 +71,7 @@ public class VisitOccurrence {
 
   /** A foreign key to the care site in the care site table that was visited. */
   @Column(name = "care_site_id")
-  private Integer careSiteId;
+  private Long careSiteId;
 
   /** The source code for the visit as it appears in the source data. */
   @Column(name = "visit_source_value")

@@ -36,6 +36,7 @@ import org.miracum.etl.fhirtoomop.listeners.EncounterMainStepListener;
 import org.miracum.etl.fhirtoomop.listeners.FhirResourceProcessListener;
 import org.miracum.etl.fhirtoomop.listeners.FhirToOmopJobListener;
 import org.miracum.etl.fhirtoomop.listeners.ImmunizationStepListener;
+import org.miracum.etl.fhirtoomop.listeners.LocationStepListener;
 import org.miracum.etl.fhirtoomop.listeners.MedicationAdministrationStepListener;
 import org.miracum.etl.fhirtoomop.listeners.MedicationStatementStepListener;
 import org.miracum.etl.fhirtoomop.listeners.MedicationStepListener;
@@ -48,6 +49,7 @@ import org.miracum.etl.fhirtoomop.mapper.DiagnosticReportMapper;
 import org.miracum.etl.fhirtoomop.mapper.EncounterDepartmentCaseMapper;
 import org.miracum.etl.fhirtoomop.mapper.EncounterInstitutionContactMapper;
 import org.miracum.etl.fhirtoomop.mapper.ImmunizationMapper;
+import org.miracum.etl.fhirtoomop.mapper.LocationMapper;
 import org.miracum.etl.fhirtoomop.mapper.MedicationAdministrationMapper;
 import org.miracum.etl.fhirtoomop.mapper.MedicationMapper;
 import org.miracum.etl.fhirtoomop.mapper.MedicationStatementMapper;
@@ -62,6 +64,7 @@ import org.miracum.etl.fhirtoomop.processor.DiagnosticReportProcessor;
 import org.miracum.etl.fhirtoomop.processor.EncounterDepartmentCaseProcessor;
 import org.miracum.etl.fhirtoomop.processor.EncounterInstitutionContactProcessor;
 import org.miracum.etl.fhirtoomop.processor.ImmunizationStatusProcessor;
+import org.miracum.etl.fhirtoomop.processor.LocationProcessor;
 import org.miracum.etl.fhirtoomop.processor.MedicationAdministrationProcessor;
 import org.miracum.etl.fhirtoomop.processor.MedicationProcessor;
 import org.miracum.etl.fhirtoomop.processor.MedicationStatementProcessor;
@@ -480,6 +483,7 @@ public class TaskConfiguration {
   @Bean
   public Flow fullLoadFlow(
       Step stepProcessPatients,
+      Step stepProcessLocations,
       Step stepProcessEncounterInstitutionContact,
       Step stepProcessConditions,
       Step stepProcessObservations,
@@ -491,6 +495,7 @@ public class TaskConfiguration {
       Flow medicationStepsFlow) {
     return new FlowBuilder<SimpleFlow>("bulkload")
         .start(stepProcessPatients)
+        .next(stepProcessLocations)
         .next(stepProcessEncounterInstitutionContact)
         .next(stepEncounterDepartmentCase)
         .next(medicationStepsFlow)
@@ -616,6 +621,7 @@ public class TaskConfiguration {
   @Bean
   public Flow incrementalLoadFlow(
       Step stepProcessPatients,
+      Step stepProcessLocations,
       Step stepProcessEncounterInstitutionContact,
       Step stepProcessConditions,
       Step stepProcessObservations,
@@ -627,6 +633,7 @@ public class TaskConfiguration {
       Flow medicationStepsFlow) {
     return new FlowBuilder<SimpleFlow>("incrementalLoad")
         .start(stepProcessPatients)
+        .next(stepProcessLocations)
         .next(stepProcessEncounterInstitutionContact)
         .next(stepEncounterDepartmentCase)
         .next(medicationStepsFlow)
@@ -681,13 +688,13 @@ public class TaskConfiguration {
       IGenericClient client,
       IParser fhirParser) {
 
-    var resourceType = "Patient";
+    var resourceType = ResourceType.PATIENT.getDisplay();
     log.info(FETCH_RESOURCES_LOG, resourceType);
     if (StringUtils.isBlank(fhirBaseUrl)) {
       return createResourceReader(resourceType, dataSource);
     }
 
-    return fhirServerItemReader(client, fhirParser, ResourceType.PATIENT.getDisplay(), "");
+    return fhirServerItemReader(client, fhirParser, resourceType, "");
   }
 
   /**
@@ -775,16 +782,13 @@ public class TaskConfiguration {
       @Qualifier("readerDataSource") final DataSource dataSource,
       IGenericClient client,
       IParser fhirParser) {
-    var resourceType = "Encounter";
+    var resourceType = ResourceType.ENCOUNTER.getDisplay();
     log.info(FETCH_RESOURCES_LOG, resourceType);
     if (StringUtils.isBlank(fhirBaseUrl)) {
       return encounterReader(dataSource, false);
     }
     return fhirServerItemReader(
-        client,
-        fhirParser,
-        ResourceType.ENCOUNTER.getDisplay(),
-        STEP_ENCOUNTER_INSTITUTION_KONTAKT);
+        client, fhirParser, resourceType, STEP_ENCOUNTER_INSTITUTION_KONTAKT);
   }
 
   /**
@@ -924,13 +928,13 @@ public class TaskConfiguration {
       @Qualifier("readerDataSource") final DataSource dataSource,
       IGenericClient client,
       IParser fhirParser) {
-    var resourceType = "Condition";
+    var resourceType = ResourceType.CONDITION.getDisplay();
     log.info(FETCH_RESOURCES_LOG, resourceType);
 
     if (StringUtils.isBlank(fhirBaseUrl)) {
       return createResourceReader(resourceType, dataSource);
     }
-    return fhirServerItemReader(client, fhirParser, ResourceType.CONDITION.getDisplay(), "");
+    return fhirServerItemReader(client, fhirParser, resourceType, "");
   }
 
   /**
@@ -996,13 +1000,13 @@ public class TaskConfiguration {
       @Qualifier("readerDataSource") final DataSource dataSource,
       IGenericClient client,
       IParser fhirParser) {
-    var resourceType = "Observation";
+    var resourceType = ResourceType.OBSERVATION.getDisplay();
     log.info(FETCH_RESOURCES_LOG, resourceType);
 
     if (StringUtils.isBlank(fhirBaseUrl)) {
       return createResourceReader(resourceType, dataSource);
     }
-    return fhirServerItemReader(client, fhirParser, ResourceType.OBSERVATION.getDisplay(), "");
+    return fhirServerItemReader(client, fhirParser, resourceType, "");
   }
 
   /**
@@ -1069,13 +1073,13 @@ public class TaskConfiguration {
       @Qualifier("readerDataSource") final DataSource dataSource,
       IGenericClient client,
       IParser fhirParser) {
-    var resourceType = "Procedure";
+    var resourceType = ResourceType.PROCEDURE.getDisplay();
     log.info(FETCH_RESOURCES_LOG, resourceType);
 
     if (StringUtils.isBlank(fhirBaseUrl)) {
       return createResourceReader(resourceType, dataSource);
     }
-    return fhirServerItemReader(client, fhirParser, ResourceType.PROCEDURE.getDisplay(), "");
+    return fhirServerItemReader(client, fhirParser, resourceType, "");
   }
 
   /**
@@ -1142,13 +1146,13 @@ public class TaskConfiguration {
       @Qualifier("readerDataSource") final DataSource dataSource,
       IGenericClient client,
       IParser fhirParser) {
-    var resourceType = "Medication";
+    var resourceType = ResourceType.MEDICATION.getDisplay();
     log.info(FETCH_RESOURCES_LOG, resourceType);
 
     if (StringUtils.isBlank(fhirBaseUrl)) {
       return createResourceReader(resourceType, dataSource);
     }
-    return fhirServerItemReader(client, fhirParser, ResourceType.MEDICATION.getDisplay(), "");
+    return fhirServerItemReader(client, fhirParser, resourceType, "");
   }
 
   /**
@@ -1214,14 +1218,13 @@ public class TaskConfiguration {
       @Qualifier("readerDataSource") final DataSource dataSource,
       IGenericClient client,
       IParser fhirParser) {
-    var resourceType = "MedicationAdministration";
+    var resourceType = ResourceType.MEDICATIONADMINISTRATION.getDisplay();
     log.info(FETCH_RESOURCES_LOG, resourceType);
 
     if (StringUtils.isBlank(fhirBaseUrl)) {
       return createResourceReader(resourceType, dataSource);
     }
-    return fhirServerItemReader(
-        client, fhirParser, ResourceType.MEDICATIONADMINISTRATION.getDisplay(), "");
+    return fhirServerItemReader(client, fhirParser, resourceType, "");
   }
 
   /**
@@ -1291,14 +1294,13 @@ public class TaskConfiguration {
       @Qualifier("readerDataSource") final DataSource dataSource,
       IGenericClient client,
       IParser fhirParser) {
-    var resourceType = "MedicationStatement";
+    var resourceType = ResourceType.MEDICATIONSTATEMENT.getDisplay();
     log.info(FETCH_RESOURCES_LOG, resourceType);
 
     if (StringUtils.isBlank(fhirBaseUrl)) {
       return createResourceReader(resourceType, dataSource);
     }
-    return fhirServerItemReader(
-        client, fhirParser, ResourceType.MEDICATIONSTATEMENT.getDisplay(), "");
+    return fhirServerItemReader(client, fhirParser, resourceType, "");
   }
 
   /**
@@ -1359,13 +1361,13 @@ public class TaskConfiguration {
       @Qualifier("readerDataSource") final DataSource dataSource,
       IGenericClient client,
       IParser fhirParser) {
-    var resourceType = "Immunization";
+    var resourceType = ResourceType.IMMUNIZATION.getDisplay();
     log.info(FETCH_RESOURCES_LOG, resourceType);
 
     if (StringUtils.isBlank(fhirBaseUrl)) {
       return createResourceReader(resourceType, dataSource);
     }
-    return fhirServerItemReader(client, fhirParser, ResourceType.IMMUNIZATION.getDisplay(), "");
+    return fhirServerItemReader(client, fhirParser, resourceType, "");
   }
 
   @Bean
@@ -1404,13 +1406,13 @@ public class TaskConfiguration {
       @Qualifier("readerDataSource") final DataSource dataSource,
       IGenericClient client,
       IParser fhirParser) {
-    var resourceType = "Consent";
+    var resourceType = ResourceType.CONSENT.getDisplay();
     log.info(FETCH_RESOURCES_LOG, resourceType);
 
     if (StringUtils.isBlank(fhirBaseUrl)) {
       return createResourceReader(resourceType, dataSource);
     }
-    return fhirServerItemReader(client, fhirParser, ResourceType.CONSENT.getDisplay(), "");
+    return fhirServerItemReader(client, fhirParser, resourceType, "");
   }
 
   @Bean
@@ -1447,13 +1449,13 @@ public class TaskConfiguration {
       @Qualifier("readerDataSource") final DataSource dataSource,
       IGenericClient client,
       IParser fhirParser) {
-    var resourceType = "DiagnosticReport";
+    var resourceType = ResourceType.DIAGNOSTICREPORT.getDisplay();
     log.info(FETCH_RESOURCES_LOG, resourceType);
 
     if (StringUtils.isBlank(fhirBaseUrl)) {
       return createResourceReader(resourceType, dataSource);
     }
-    return fhirServerItemReader(client, fhirParser, ResourceType.DIAGNOSTICREPORT.getDisplay(), "");
+    return fhirServerItemReader(client, fhirParser, resourceType, "");
   }
 
   @Bean
@@ -1484,6 +1486,49 @@ public class TaskConfiguration {
       IParser parser, DiagnosticReportMapper diagnosticReportMapper) {
 
     return new DiagnosticReportProcessor(diagnosticReportMapper, parser);
+  }
+
+  @Bean
+  @StepScope
+  public ItemStreamReader<FhirPsqlResource> readerPsqlLocation(
+      @Qualifier("readerDataSource") final DataSource dataSource,
+      IGenericClient client,
+      IParser fhirParser) {
+    var resourceType = ResourceType.LOCATION.getDisplay();
+    log.info(FETCH_RESOURCES_LOG, resourceType);
+
+    if (StringUtils.isBlank(fhirBaseUrl)) {
+      return createResourceReader(resourceType, dataSource);
+    }
+    return fhirServerItemReader(client, fhirParser, resourceType, "");
+  }
+
+  @Bean
+  public Step stepProcessLocations(
+      LocationProcessor locationProcessor,
+      LocationStepListener locationStepListener,
+      ItemStreamReader<FhirPsqlResource> readerPsqlLocation,
+      ItemWriter<OmopModelWrapper> writer) {
+    var locationStepBuilder =
+        stepBuilderFactory
+            .get("stepProcessLocation")
+            .listener(locationStepListener)
+            .<FhirPsqlResource, OmopModelWrapper>chunk(batchChunkSize)
+            .reader(readerPsqlLocation)
+            .processor(locationProcessor)
+            .listener(new FhirResourceProcessListener())
+            .writer(writer);
+
+    if (bulkload.equals(Boolean.TRUE)) {
+      locationStepBuilder.throttleLimit(throttleLimit).taskExecutor(taskExecutor());
+    }
+
+    return locationStepBuilder.build();
+  }
+
+  @Bean
+  public LocationProcessor locationProcessor(IParser parser, LocationMapper locationMapper) {
+    return new LocationProcessor(locationMapper, parser);
   }
 
   /**

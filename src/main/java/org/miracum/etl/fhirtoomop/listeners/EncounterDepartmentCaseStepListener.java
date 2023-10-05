@@ -3,6 +3,7 @@ package org.miracum.etl.fhirtoomop.listeners;
 import com.google.common.base.Strings;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.HashMap;
 import javax.sql.DataSource;
 import lombok.extern.slf4j.Slf4j;
 import org.miracum.etl.fhirtoomop.DbMappings;
@@ -108,7 +109,7 @@ public class EncounterDepartmentCaseStepListener implements StepExecutionListene
       }
     }
 
-    dbMappings.setFindCareSiteId(repositories.getCareSiteRepository().careSitesMap());
+    dbMappings.setFindCareSiteId(new HashMap<>());
     dbMappings.setFindHardCodeConcept(
         repositories.getSourceToConceptRepository().sourceToConceptMap());
   }
