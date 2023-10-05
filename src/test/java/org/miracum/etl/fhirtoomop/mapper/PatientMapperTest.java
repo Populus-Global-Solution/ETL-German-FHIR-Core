@@ -20,7 +20,8 @@ class PatientMapperTest extends MapperTestBase {
   private IFhirPath fhirPath = new FhirPathR4(FhirContext.forR4());
   private DbMappings dbMappings = new DbMappings();
 
-  @InjectMocks private PatientMapper sut = new PatientMapper(fhirPath, true, dbMappings);
+  @InjectMocks
+  private PatientMapper sut = new PatientMapper(fhirPath, true, dbMappings, false, false);
 
   //  @Test
   //  void map_withIdentifierWithPatientIdType_shouldUseIdentifierValueAsPersonSourceValue() {

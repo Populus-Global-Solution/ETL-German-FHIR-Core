@@ -63,7 +63,7 @@ public class ImmunizationStepListener implements StepExecutionListener {
   public ImmunizationStepListener(
       OmopRepository repositories,
       DbMappings dbMappings,
-      @Qualifier("dictionaryLoadInRam") Boolean dictionaryLoadInRam,
+      Boolean dictionaryLoadInRam,
       Boolean bulkload,
       DataSource dataSource) {
     this.repositories = repositories;

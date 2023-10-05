@@ -101,6 +101,10 @@ public class Constants {
   public static final String OMOP_DOMAIN_DRUG = "Drug";
   public static final String OMOP_DOMAIN_GENDER = "Gender";
 
+  public static final String GOLDEN_RESOURCE_URL =
+      "http://hapifhir.io/fhir/NamingSystem/mdm-record-status";
+  public static final String GOLDEN_RESOURCE = "GOLDEN_RECORD";
+
   public static final ImmutableList<String> FHIR_RESOURCE_ACCEPTABLE_EVENT_STATUS_LIST =
       ImmutableList.of("in-progress", "on-hold", "completed");
   public static final ImmutableList<String>

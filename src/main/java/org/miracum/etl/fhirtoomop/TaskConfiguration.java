@@ -22,6 +22,7 @@ import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.sql.DataSource;
 import lombok.extern.slf4j.Slf4j;
@@ -130,6 +131,15 @@ public class TaskConfiguration {
   @Value("${app.dictionaryLoadInRam.enabled}")
   private Boolean dictionaryLoadInRam;
 
+  @Value("${app.goldenResourceMerging.enabled}")
+  private Boolean goldenMerging;
+
+  @Value("${app.goldenResourceTypes}")
+  private String goldenResourceTypes;
+
+  @Value("${app.treatPossibleMatchesAsMatch.enabled}")
+  private Boolean treatPossibleMatchesAsMatch;
+
   @Value("${data.beginDate}")
   private String beginDateStr;
 
@@ -151,14 +161,29 @@ public class TaskConfiguration {
   @Value("${data.fhirServer.baseUrl}")
   private String fhirBaseUrl;
 
-  @Bean
+  @Bean("bulkload")
   public Boolean bulkload() {
     return this.bulkload;
   }
 
-  @Bean
+  @Bean("dictionaryLoadInRam")
   public Boolean dictionaryLoadInRam() {
     return this.dictionaryLoadInRam;
+  }
+
+  @Bean("goldenMerging")
+  public Boolean goldenMerging() {
+    return this.goldenMerging;
+  }
+
+  @Bean("treatPossibleMatchesAsMatch")
+  public Boolean treatPossibleMatchesAsMatch() {
+    return this.treatPossibleMatchesAsMatch;
+  }
+
+  @Bean("goldenResourceTypes")
+  public List<String> goldenResourceTypes() {
+    return List.of(goldenResourceTypes.split(","));
   }
 
   /**
@@ -661,6 +686,7 @@ public class TaskConfiguration {
     if (StringUtils.isBlank(fhirBaseUrl)) {
       return createResourceReader(resourceType, dataSource);
     }
+
     return fhirServerItemReader(client, fhirParser, ResourceType.PATIENT.getDisplay(), "");
   }
 
@@ -683,6 +709,9 @@ public class TaskConfiguration {
     fhirServerItemReader.setEndDate(endDateStr);
     fhirServerItemReader.setFhirParser(parser);
     fhirServerItemReader.setStepName(stepName);
+    fhirServerItemReader.setGoldenResourceTypes(goldenResourceTypes());
+    fhirServerItemReader.setGoldenMerging(goldenMerging);
+    fhirServerItemReader.setTreatPossibleMatchesAsMatch(treatPossibleMatchesAsMatch);
     return fhirServerItemReader;
   }
 

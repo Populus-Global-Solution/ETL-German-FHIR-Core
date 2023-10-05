@@ -1,6 +1,8 @@
 package org.miracum.etl.fhirtoomop;
 
 import static org.hl7.fhir.r4.model.Enumerations.*;
+import static org.miracum.etl.fhirtoomop.Constants.GOLDEN_RESOURCE;
+import static org.miracum.etl.fhirtoomop.Constants.GOLDEN_RESOURCE_URL;
 
 import ca.uhn.fhir.parser.IParser;
 import ca.uhn.fhir.rest.api.SortSpec;
@@ -37,6 +39,9 @@ public class FhirServerItemReader extends AbstractPagingItemReader<FhirPsqlResou
   private Map<String, Object> startAfterValues;
   private static final String START_AFTER_VALUE = "start.after";
   private Map<String, Object> previousStartAfterValues;
+  private boolean goldenMerging;
+  private boolean treatPossibleMatchesAsMatch;
+  private List<String> goldenResourceTypes;
 
   private Bundle firstBundle;
   private Bundle nextBundle;
@@ -59,6 +64,18 @@ public class FhirServerItemReader extends AbstractPagingItemReader<FhirPsqlResou
 
   public void setStepName(String stepName) {
     this.stepName = stepName;
+  }
+
+  public void setGoldenMerging(boolean goldenMerging) {
+    this.goldenMerging = goldenMerging;
+  }
+
+  public void setGoldenResourceTypes(List<String> goldenResourceTypes) {
+    this.goldenResourceTypes = goldenResourceTypes;
+  }
+
+  public void setTreatPossibleMatchesAsMatch(boolean treatPossibleMatchesAsMatch) {
+    this.treatPossibleMatchesAsMatch = treatPossibleMatchesAsMatch;
   }
 
   public void setResourceTypeClass(String resourceTypeName) {
@@ -91,6 +108,11 @@ public class FhirServerItemReader extends AbstractPagingItemReader<FhirPsqlResou
             .sort(new SortSpec(IAnyResource.SP_RES_ID))
             .offset(0)
             .count(getPageSize());
+    if (goldenMerging
+        && goldenResourceTypes.contains(resourceTypeName)
+        && treatPossibleMatchesAsMatch) {
+      query.withTag(GOLDEN_RESOURCE_URL, GOLDEN_RESOURCE);
+    }
     return query;
   }
 

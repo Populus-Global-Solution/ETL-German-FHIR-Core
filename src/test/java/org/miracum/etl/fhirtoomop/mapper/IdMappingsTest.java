@@ -35,7 +35,7 @@ class IdMappingsTest extends MapperTestBase {
             .domainId("Condition")
             .build());
 
-    patientMapper = new PatientMapper(fhirPath, true, dbMappings);
+    patientMapper = new PatientMapper(fhirPath, true, dbMappings, false, false);
     conditionMapper = new ConditionMapper(true, dbMappings);
   }
 
