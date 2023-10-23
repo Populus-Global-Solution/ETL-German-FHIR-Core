@@ -129,9 +129,9 @@ public class PatientMapper implements FhirMapper<Patient> {
 
     if (goldenMerging && !treatPossibleMatchesAsMatch) {
       /* If a patient does not have a resource tag we have to check whether the patient has a
-         full MATCH or just a POSSIBLE_MATCH. If they only have a POSSIBLE_MATCH, we treat the
-         patient as a golden resource and continue processing. While treating possible matches as
-         full matches we only fetch the golden resources, so there is no need to do this additional check. */
+      full MATCH or just a POSSIBLE_MATCH. If they only have a POSSIBLE_MATCH, we treat the
+      patient as a golden resource and continue processing. While treating possible matches as
+      full matches we only fetch the golden resources, so there is no need to do this additional check. */
       if (srcPatient.getMeta().getTag(GOLDEN_RESOURCE_URL, GOLDEN_RESOURCE) == null) {
         String goldenResourceId = patientService.getGoldenResourceByFhirLogicalId(patientLogicId);
 
