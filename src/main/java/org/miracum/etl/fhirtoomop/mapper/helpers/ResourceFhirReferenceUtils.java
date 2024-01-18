@@ -3,10 +3,16 @@ package org.miracum.etl.fhirtoomop.mapper.helpers;
 import static org.miracum.etl.fhirtoomop.Constants.FHIR_RESOURCE_CONSENT;
 
 import ca.uhn.fhir.fhirpath.IFhirPath;
+import ca.uhn.fhir.rest.client.api.IGenericClient;
+import ca.uhn.fhir.rest.server.exceptions.InvalidRequestException;
+import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.regex.Pattern;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.hl7.fhir.r4.model.Parameters;
 import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.Resource;
 import org.hl7.fhir.r4.model.StringType;
@@ -24,6 +30,9 @@ public class ResourceFhirReferenceUtils {
 
   private final IFhirPath fhirPath;
   private final FhirSystems fhirSystems;
+  private final Pattern uuidRegex =
+      Pattern.compile(
+          "[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}");
 
   /**
    * Constructor for objects of the class ResourceFhirReferenceUtils.
@@ -123,6 +132,7 @@ public class ResourceFhirReferenceUtils {
 
     return null;
   }
+
   /**
    * Extracts the identifier from a FHIR resource.
    *
@@ -171,16 +181,16 @@ public class ResourceFhirReferenceUtils {
     return null;
   }
 
-  private String getResourceTypePrefix(IBaseResource resource) {
-    var resourceTypeName = resource.fhirType().split("(?=\\p{Upper})");
-    switch (resourceTypeName.length) {
+  public String getResourceTypePrefix(String resourceType) {
+    var resourceTypeSplit = resourceType.split("(?=\\p{Upper})");
+    switch (resourceTypeSplit.length) {
       case 1:
-        if (resourceTypeName[0].equals(FHIR_RESOURCE_CONSENT)) {
-          return resourceTypeName[0].substring(0, 4).toLowerCase() + "-";
+        if (resourceTypeSplit[0].equals(FHIR_RESOURCE_CONSENT)) {
+          return resourceTypeSplit[0].substring(0, 4).toLowerCase() + "-";
         }
-        return resourceTypeName[0].substring(0, 3).toLowerCase() + "-";
+        return resourceTypeSplit[0].substring(0, 3).toLowerCase() + "-";
       case 2:
-        return (resourceTypeName[0].substring(0, 2) + resourceTypeName[1].substring(0, 1))
+        return (resourceTypeSplit[0].substring(0, 2) + resourceTypeSplit[1].substring(0, 1))
                 .toLowerCase()
             + "-";
       default:
@@ -188,6 +198,11 @@ public class ResourceFhirReferenceUtils {
         return null;
     }
   }
+
+  private String getResourceTypePrefix(IBaseResource resource) {
+    return getResourceTypePrefix(resource.fhirType());
+  }
+
   /**
    * Extracts the first found identifier from the FHIR resource.
    *
@@ -211,5 +226,89 @@ public class ResourceFhirReferenceUtils {
     }
 
     return null;
+  }
+
+  /**
+   * Queries HAPI FHIR MDM for the golden resource ID
+   *
+   * @param logicalId the full id of the resource
+   * @param treatPossibleMatchesAsMatch
+   * @return
+   */
+  public String getGoldenResourceByFhirLogicalId(
+      String logicalId,
+      String resourceType,
+      boolean treatPossibleMatchesAsMatch,
+      IGenericClient client) {
+
+    var matcher = uuidRegex.matcher(logicalId);
+    if (!matcher.find()) {
+      return null;
+    }
+    var fhirId = resourceType + "/" + matcher.group();
+    log.info("Finding matches for {}", fhirId);
+
+    // Query for links with this id
+    Parameters response;
+    try {
+      response =
+          client
+              .operation()
+              .onServer()
+              .named("$mdm-query-links")
+              .withParameter(Parameters.class, "resourceId", new StringType(fhirId))
+              .execute();
+    } catch (InvalidRequestException e) {
+      log.error("Invalid request with resource ID: {}", fhirId);
+      return logicalId;
+    }
+
+    // Get the link param lists
+    List<List<Parameters.ParametersParameterComponent>> links =
+        response.getParameter().stream()
+            .filter(param -> param.getName().equals("link"))
+            .map(
+                linkParams -> {
+                  return linkParams.getPart();
+                })
+            .toList();
+
+    // Find the link with MATCH or POSSIBLE_MATCH
+    for (List<Parameters.ParametersParameterComponent> link : links) {
+      Optional<String> goldenResourceId =
+          getGoldenResourceFromLink(link, treatPossibleMatchesAsMatch);
+      if (goldenResourceId.isPresent()) {
+        return goldenResourceId
+            .get()
+            .replaceFirst(resourceType + "/", getResourceTypePrefix(resourceType));
+      }
+    }
+
+    // If we did not find a MATCH then we return the same ID
+    return logicalId;
+  }
+
+  private Optional<String> getGoldenResourceFromLink(
+      List<Parameters.ParametersParameterComponent> link, boolean treatPossibleMatchesAsMatch) {
+    for (Parameters.ParametersParameterComponent param : link) {
+      if (param.getName().equals("matchResult")) {
+        String value = param.getValue().toString();
+        if (value.equals("MATCH")
+            || (treatPossibleMatchesAsMatch && value.equals("POSSIBLE_MATCH"))) {
+          String goldenResourceId =
+              link.stream()
+                  .filter(p -> p.getName().equals("goldenResourceId"))
+                  .findFirst()
+                  .get()
+                  .getValue()
+                  .toString();
+          return Optional.of(goldenResourceId);
+        } else {
+          return Optional.empty();
+        }
+      }
+    }
+
+    return Optional.empty();
   }
 }

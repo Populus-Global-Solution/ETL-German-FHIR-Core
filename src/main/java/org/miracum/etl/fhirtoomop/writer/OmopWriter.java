@@ -81,6 +81,8 @@ public class OmopWriter implements ItemWriter<OmopModelWrapper> {
     writeDrugExposure(entries);
     writeMeasurement(entries);
     writeDeviceExposure(entries);
+    writeLocation(entries);
+    writeCareSite(entries);
 
     return Optional.empty();
   }
@@ -306,6 +308,36 @@ public class OmopWriter implements ItemWriter<OmopModelWrapper> {
       log.info("Inserting rowCount={} rows into device_exposure table", deviceExposure.size());
 
       repository.getDeviceExposureRepository().saveAll(deviceExposure);
+    }
+  }
+
+  private void writeLocation(List<? extends OmopModelWrapper> entries) {
+    var locations =
+        entries.stream()
+            .filter(entry -> entry.getLocation() != null)
+            .map(OmopModelWrapper::getLocation)
+            .flatMap(List::stream)
+            .filter(Objects::nonNull)
+            .collect(Collectors.toList());
+    if (!locations.isEmpty()) {
+      log.info("Inserting rowCount={} rows into location table", locations.size());
+
+      repository.getLocationRepository().saveAll(locations);
+    }
+  }
+
+  private void writeCareSite(List<? extends OmopModelWrapper> entries) {
+    var careSites =
+        entries.stream()
+            .filter(entry -> entry.getCareSite() != null)
+            .map(OmopModelWrapper::getCareSite)
+            .flatMap(List::stream)
+            .filter(Objects::nonNull)
+            .collect(Collectors.toList());
+    if (!careSites.isEmpty()) {
+      log.info("Inserting rowCount={} rows into care site table", careSites.size());
+
+      repository.getCareSiteRepository().saveAll(careSites);
     }
   }
 

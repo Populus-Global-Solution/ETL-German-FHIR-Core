@@ -42,6 +42,7 @@ import org.miracum.etl.fhirtoomop.model.OmopModelWrapper;
 import org.miracum.etl.fhirtoomop.model.OmopModelWrapper.Tablename;
 import org.miracum.etl.fhirtoomop.model.PostProcessMap;
 import org.miracum.etl.fhirtoomop.model.omop.VisitOccurrence;
+import org.miracum.etl.fhirtoomop.repository.service.CareSiteServiceImpl;
 import org.miracum.etl.fhirtoomop.repository.service.EncounterInstitutionContactMapperServiceImpl;
 import org.miracum.etl.fhirtoomop.repository.service.OmopConceptServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +69,7 @@ public class EncounterInstitutionContactMapper implements FhirMapper<Encounter> 
   @Autowired ResourceFhirReferenceUtils fhirReferenceUtils;
   @Autowired FindOmopConcepts findOmopConcepts;
   @Autowired EncounterInstitutionContactMapperServiceImpl institutionContactService;
+  @Autowired CareSiteServiceImpl careSiteService;
 
   private static final Counter noStartDateCounter =
       MapperMetrics.setNoStartDateCounter("EncounterInstitutionContact");
@@ -281,6 +283,7 @@ public class EncounterInstitutionContactMapper implements FhirMapper<Encounter> 
     var visitTypeConceptId = getVisitTypeConceptId(srcEncounter, endDateTime);
     var visitEndDateTime = setVisitEndDateTime(visitTypeConceptId, endDateTime, encounterLogicId);
     var visitSourceValue = cutString(encounterSourceIdentifier);
+    var careSiteId = getCareSiteId(srcEncounter.getLocation());
     var visitOccurrence =
         VisitOccurrence.builder()
             .visitStartDate(startDateTime.toLocalDate())
@@ -293,6 +296,7 @@ public class EncounterInstitutionContactMapper implements FhirMapper<Encounter> 
             .visitEndDatetime(visitEndDateTime)
             .visitEndDate(visitEndDateTime.toLocalDate())
             .visitSourceValue(visitSourceValue == null ? null : visitSourceValue.substring(4))
+            .careSiteId(careSiteId)
             .build();
     if (bulkload.equals(Boolean.FALSE)) {
       var existingVisitOccId =
@@ -305,6 +309,19 @@ public class EncounterInstitutionContactMapper implements FhirMapper<Encounter> 
       }
     }
     return visitOccurrence;
+  }
+
+  private Long getCareSiteId(List<Encounter.EncounterLocationComponent> locations) {
+    for (var locationComponent : locations) {
+      var careSiteId =
+          careSiteService.findCareSiteIdByFhirLogicalId(
+              locationComponent.getLocation().getReference());
+      if (careSiteId != null) {
+        return careSiteId;
+      }
+    }
+
+    return null;
   }
 
   /**

@@ -11,6 +11,7 @@ ALTER TABLE death ADD COLUMN IF NOT EXISTS fhir_logical_id varchar(250) NULL, AD
 ALTER TABLE drug_exposure ADD COLUMN IF NOT EXISTS fhir_logical_id varchar(250) NULL, ADD COLUMN IF NOT EXISTS fhir_identifier varchar(250) NULL;
 ALTER TABLE condition_occurrence ADD COLUMN IF NOT EXISTS fhir_logical_id varchar(250) NULL, ADD COLUMN IF NOT EXISTS fhir_identifier varchar(250) NULL;
 ALTER TABLE device_exposure ADD COLUMN IF NOT EXISTS fhir_logical_id varchar(250) NULL, ADD COLUMN IF NOT EXISTS fhir_identifier varchar(250) NULL;
+ALTER TABLE location ADD COLUMN IF NOT EXISTS fhir_logical_id varchar(250) NULL, ADD COLUMN IF NOT EXISTS fhir_identifier varchar(250) NULL;
 
 ALTER TABLE fact_relationship ADD COLUMN IF NOT EXISTS fhir_logical_id_1 varchar(250) NULL, ADD COLUMN IF NOT EXISTS fhir_identifier_1 varchar(250) NULL;
 ALTER TABLE fact_relationship ADD COLUMN IF NOT EXISTS fhir_logical_id_2 varchar(250) NULL, ADD COLUMN IF NOT EXISTS fhir_identifier_2 varchar(250) NULL;

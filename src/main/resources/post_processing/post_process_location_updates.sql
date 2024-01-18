@@ -95,3 +95,11 @@ GET DIAGNOSTICS v_rowCount = ROW_COUNT;
 RAISE NOTICE 'Updated % rows in person.',v_rowCount;
 END;
 $$;
+
+-- Update location_id in care_site table
+DO
+$$
+BEGIN
+UPDATE cdm.care_site care_site SET location_id = (SELECT location_id FROM cdm.location location WHERE care_site.fhir_logical_id = location.fhir_logical_id);
+END;
+$$

@@ -108,6 +108,9 @@ public class FhirServerItemReader extends AbstractPagingItemReader<FhirPsqlResou
             .sort(new SortSpec(IAnyResource.SP_RES_ID))
             .offset(0)
             .count(getPageSize());
+    // If we're treating POSSIBLE_MATCH as a full match, all of our golden resources will have the
+    // meta tag,
+    // which we can just search for and save having to do some requests.
     if (goldenMerging
         && goldenResourceTypes.contains(resourceTypeName)
         && treatPossibleMatchesAsMatch) {

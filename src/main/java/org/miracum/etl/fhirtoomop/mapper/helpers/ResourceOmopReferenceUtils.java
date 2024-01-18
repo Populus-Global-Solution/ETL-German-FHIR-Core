@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.miracum.etl.fhirtoomop.DbMappings;
 import org.miracum.etl.fhirtoomop.model.MedicationIdMap;
 import org.miracum.etl.fhirtoomop.repository.OmopRepository;
+import org.miracum.etl.fhirtoomop.repository.service.CareSiteServiceImpl;
 import org.miracum.etl.fhirtoomop.repository.service.EncounterInstitutionContactMapperServiceImpl;
 import org.miracum.etl.fhirtoomop.repository.service.PatientMapperServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,7 @@ public class ResourceOmopReferenceUtils {
   private OmopRepository repositories;
   private Boolean dictionaryLoadInRam;
   @Autowired PatientMapperServiceImpl patientMapperService;
+  @Autowired CareSiteServiceImpl careSiteService;
   @Autowired EncounterInstitutionContactMapperServiceImpl encounterMapperService;
 
   @Autowired
@@ -373,5 +375,14 @@ public class ResourceOmopReferenceUtils {
         .fhirIdentifier(sourceIdentifier)
         .atc(atc)
         .build();
+  }
+
+  public Long getCareSiteId(String logicalId, String sourceResourceId) {
+    if (logicalId == null) {
+      log.warn("Unable to extract [Location Reference] for {}.", sourceResourceId);
+      return null;
+    }
+
+    return careSiteService.findCareSiteIdByFhirLogicalId(logicalId);
   }
 }

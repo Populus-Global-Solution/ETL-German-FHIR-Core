@@ -56,6 +56,7 @@ public class Constants {
   public static final String SOURCE_VOCABULARY_ID_ICD_LOCALIZATION = "ICD Localization";
   public static final String SOURCE_VOCABULARY_ID_PROCEDURE_DICOM = "Procedure DICOM";
   public static final String SOURCE_VOCABULARY_ID_DIAGNOSIS_TYPE = "Diagnosis Type";
+  public static final String SOURCE_VOCABULARY_ID_LOCATION_TYPE = "Location Type";
 
   public static final String SOURCE_VOCABULARY_ID_DIAGNOSTIC_REPORT_CATEGORY = "Diag.Rep Category";
   public static final String SOURCE_VOCABULARY_ID_ECRF_PARAMETER = "ECRF Parameter";
