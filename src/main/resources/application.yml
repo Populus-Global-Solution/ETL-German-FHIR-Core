@@ -32,6 +32,8 @@ data:
     baseUrl: ""
     username: ""
     password: ""
+    tokenUrl: ""
+    tokenMinValiditySeconds: 20
     connectionTimeout: 3000
     socketTimeout: 3000
   omopCdm:

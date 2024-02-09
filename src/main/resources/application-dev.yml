@@ -14,6 +14,8 @@ data:
     baseUrl: ""
     username: ""
     password: ""
+    tokenUrl: ""
+    tokenMinValiditySeconds: 20
   omopCdm:
     jdbcUrl: "jdbc:postgresql://localhost:5310/ohdsi"
     username: "ohdsi_admin_user"
