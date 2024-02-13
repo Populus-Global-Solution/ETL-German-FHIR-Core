@@ -5,9 +5,9 @@ import ca.uhn.fhir.fhirpath.IFhirPath;
 import ca.uhn.fhir.parser.IParser;
 import ca.uhn.fhir.rest.client.api.IClientInterceptor;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
-import ca.uhn.fhir.rest.client.interceptor.BasicAuthInterceptor;
 import com.google.common.base.Strings;
 import org.hl7.fhir.r4.hapi.fluentpath.FhirPathR4;
+import org.miracum.etl.fhirtoomop.interceptors.ClientCredentialsInterceptor;
 import org.miracum.etl.fhirtoomop.mapper.helpers.ResourceFhirReferenceUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -35,6 +35,12 @@ public class FhirConfig {
 
   @Value("${data.fhirServer.password}")
   private String fhirServerPassword;
+
+  @Value("${data.fhirServer.tokenUrl}")
+  private String fhirTokenUrl;
+
+  @Value("${data.fhirServer.tokenMinValiditySeconds}")
+  private Integer fhirTokenMinValiditySeconds;
 
   /**
    * Sets the FHIR context with FHIR R4 version.
@@ -91,9 +97,14 @@ public class FhirConfig {
     fhirContext.getRestfulClientFactory().setSocketTimeout(socketTimeout);
     fhirContext.getRestfulClientFactory().setConnectTimeout(connectionTimeout);
     var fhirClient = fhirContext.newRestfulGenericClient(fhirBaseUrl);
-    if (!Strings.isNullOrEmpty(fhirServerPassword) && !Strings.isNullOrEmpty(fhirServerUsername)) {
+    if (!Strings.isNullOrEmpty(fhirServerPassword)
+        && !Strings.isNullOrEmpty(fhirServerUsername)
+        && !Strings.isNullOrEmpty(fhirTokenUrl)
+        && fhirTokenMinValiditySeconds != null) {
       IClientInterceptor authInterceptor =
-          new BasicAuthInterceptor(fhirServerUsername, fhirServerPassword);
+          new ClientCredentialsInterceptor(
+              fhirServerUsername, fhirServerPassword, fhirTokenUrl, fhirTokenMinValiditySeconds);
+
       fhirClient.registerInterceptor(authInterceptor);
     }
 
